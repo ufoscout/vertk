@@ -1,109 +1,68 @@
 package com.ufoscout.vertxk.http
 
-import com.ufoscout.vertxk.awaitFirst
+import com.ufoscout.vertxk.BaseTest
+import com.ufoscout.vertxk.await
 import com.ufoscout.vertxk.awaitResult
-import com.ufoscout.vertxk.runVertxCoroutine
-import com.ufoscout.vertxk.vertxCoroutineContext
-import io.vertx.core.*
-import io.vertx.ext.unit.TestContext
-import io.vertx.ext.unit.junit.VertxUnitRunner
-import org.junit.runner.RunWith
+import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpClientResponse
-import io.vertx.ext.unit.junit.RunTestOnContext
-import kotlinx.coroutines.experimental.*
-import org.junit.*
-import java.util.concurrent.atomic.AtomicReference
-import kotlin.coroutines.experimental.suspendCoroutine
+import kotlinx.coroutines.experimental.runBlocking
+import org.junit.After
+import org.junit.Assert
+import org.junit.Before
+import org.junit.Test
 
 
-@RunWith(VertxUnitRunner::class)
-class HelloWorldTest {
+class HelloWorldTest : BaseTest() {
 
-    @Rule @JvmField val rule = RunTestOnContext()
-    private lateinit var vertx: Vertx
+    private val vertx = Vertx.vertx()
 
     @Before
-    fun setUp(context: TestContext)
-    //        = runBlocking<Unit>
-    {
-        vertx = rule.vertx()
-        //awaitResult<String> { vertx.deployVerticle(HelloWorldVerticle::class.java!!.getName(), it) }
-
-        vertx.deployVerticle(HelloWorldVerticle::class.java!!.getName(), context.asyncAssertSuccess())
-
+    fun setUp() = runBlocking<Unit> {
+        awaitResult<String> { vertx.deployVerticle(HelloWorldVerticle::class.java!!.getName(), it) }
     }
+
 
     @After
-    fun tearDown(context: TestContext)
-    //        = runBlocking<Unit>
-    {
-      //  awaitResult<Void> { vertx.close(it) }
-        vertx.close(context.asyncAssertSuccess())
+    fun tearDown() = runBlocking<Unit> {
+        awaitResult<Void> { vertx.close(it) }
     }
 
     @Test
-    fun testAsync(context: TestContext) {
-        val atc = context.async()
-        vertx.createHttpClient().getNow(8080, "localhost", "/") { response ->
-            response.handler { body ->
-                context.assertTrue(body.toString().equals("Hello, World!"))
-                atc.complete()
-            }
-        }
-    }
-
-    @Test
-    fun testSync1(context: TestContext) = runVertxCoroutine {
-        val atc = context.async()
+    fun testSync1() = runBlocking<Unit> {
         val body = await<Buffer> {
             vertx.createHttpClient().getNow(8080, "localhost", "/", { response -> response.bodyHandler(it)} )
         }
-        context.assertTrue(body.toString().equals("Hello, World!"))
-        atc.complete()
+        Assert.assertTrue(body.toString().equals("Hello, World!"))
+        println("Found $body")
     }
 
+    // The assertion in this test is never called because it is called in an async block
     @Test
-    fun testSync2(context: TestContext) = runVertxCoroutine {
-        val atc = context.async()
+    fun testSync2() = runBlocking<Unit> {
         val response = await<HttpClientResponse> {
                 vertx.createHttpClient().getNow(8080, "localhost", "/", it )
         }
-        response.handler { body ->
-            context.assertTrue(body.toString().equals("Hello, World!"))
-            atc.complete()
+        response.bodyHandler { body ->
+            Assert.assertTrue(body.toString().equals("Hello, World!"))
+            println("Found $body")
         }
-
     }
 
+    // This test has a race-condition; in fact, the response bodyHandler could be called once the
+    // the body received handler was already called.
+    /*
     @Test
-    fun testSync3(context: TestContext) = runVertxCoroutine {
-        val atc = context.async()
+    fun testSync3() = runBlocking {
         val response = await<HttpClientResponse> {
-            println(1)
             vertx.createHttpClient().getNow(8080, "localhost", "/", it )
         }
-
-        println(2)
         val body = await<Buffer> {
-            println(3)
             response.bodyHandler( it )
         }
-
-        println(4)
-        context.assertTrue(body.toString().equals("Hello, World!"))
-
-        println(5)
-        atc.complete()
-
-        println(6)
-
+        Assert.assertTrue(body.toString().equals("Hello, World!"))
+        println("Found $body")
     }
+    */
 
-    suspend fun <T> await(callback: (Handler<T>) -> Unit) =
-            suspendCoroutine<T> { cont ->
-                callback(Handler { result: T ->
-                    cont.resume(result)
-                })
-            }
 }

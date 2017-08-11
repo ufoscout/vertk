@@ -2,6 +2,7 @@ package com.ufoscout.vertxk
 
 import io.vertx.core.*
 import kotlinx.coroutines.experimental.*
+import java.util.concurrent.Executor
 import kotlin.coroutines.experimental.Continuation
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -26,13 +27,19 @@ inline suspend fun <T> awaitFirst(crossinline callback: (Handler<T>) -> Unit) =
             })
         }
 
+suspend fun <T> await(callback: (Handler<T>) -> Unit) =
+        suspendCoroutine<T> { cont ->
+            callback(Handler { result: T ->
+                cont.resume(result)
+            })
+        }
 
 /**
  * Convert a standard handler to a handler which runs on a coroutine.
  * This is necessary if you want to do fiber blocking synchronous operation in your handler
  */
-fun runVertxCoroutine(block: suspend CoroutineScope.() -> Unit) {
-    launch(vertxCoroutineContext()) {
+fun runVertxCoroutine(vertx: Vertx, block: suspend CoroutineScope.() -> Unit) {
+    launch(vertx.asCoroutineDispatcher()) {
         try {
             block()
         } catch (e: CancellationException) {
@@ -69,4 +76,10 @@ private class VertxContextDispatcher(val vertxContext: Context, val eventLoop: T
 fun removeVertxCoroutineContext() {
     val vertxContext = Vertx.currentContext()
     vertxContext?.remove(VERTX_COROUTINE_DISPATCHER)
+}
+
+fun Vertx.asCoroutineDispatcher() = VertxExecutor(this).asCoroutineDispatcher()
+
+class VertxExecutor(val vertx: Vertx) : Executor {
+    override fun execute(command: Runnable) = vertx.runOnContext { command.run() }
 }
