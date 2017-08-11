@@ -33,12 +33,15 @@ class HelloWorldTest {
         vertx.deployVerticle(HelloWorldVerticle::class.java!!.getName(), context.asyncAssertSuccess())
 
     }
-/*
+
     @After
-    fun tearDown(context: TestContext) = runBlocking<Unit> {
-        awaitResult<Void> { vertx.close(it) }
+    fun tearDown(context: TestContext)
+    //        = runBlocking<Unit>
+    {
+      //  awaitResult<Void> { vertx.close(it) }
+        vertx.close(context.asyncAssertSuccess())
     }
-*/
+
     @Test
     fun testAsync(context: TestContext) {
         val atc = context.async()
@@ -86,11 +89,11 @@ class HelloWorldTest {
         println(2)
         val body = await<Buffer> {
             println(3)
-            response.handler { it }
+            response.bodyHandler( it )
         }
 
         println(4)
-        context.assertTrue(body.toString().equals("Hello, World!2"))
+        context.assertTrue(body.toString().equals("Hello, World!"))
 
         println(5)
         atc.complete()
