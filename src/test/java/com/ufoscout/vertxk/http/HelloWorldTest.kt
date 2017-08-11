@@ -53,17 +53,15 @@ class HelloWorldTest {
         }
     }
 
-    /*
     @Test
     fun testSync1(context: TestContext) = runVertxCoroutine {
         val atc = context.async()
         val body = await<Buffer> {
-            vertx.createHttpClient().getNow(8080, "localhost", "/", { response -> response.handler {it}} )
+            vertx.createHttpClient().getNow(8080, "localhost", "/", { response -> response.bodyHandler(it)} )
         }
         context.assertTrue(body.toString().equals("Hello, World!"))
         atc.complete()
     }
-*/
 
     @Test
     fun testSync2(context: TestContext) = runVertxCoroutine {
