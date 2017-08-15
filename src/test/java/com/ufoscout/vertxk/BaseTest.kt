@@ -1,5 +1,8 @@
 package com.ufoscout.vertxk
 
+import com.ufoscout.vertxk.http.HelloWorldVertxkVerticle
+import io.vertx.core.Vertx
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -13,6 +16,18 @@ abstract class BaseTest {
     val name = TestName()
 
     private var startTime: Date? = null
+
+    protected val vertx = Vertx.vertx()
+
+    @Before
+    fun baseSetUp() = runBlocking<Unit> {
+    }
+
+
+    @After
+    fun baseTearDown() = runBlocking<Unit> {
+        awaitResult<Void> { vertx.close(it) }
+    }
 
     @Before
     fun setUpBeforeTest() {

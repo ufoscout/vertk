@@ -3,11 +3,9 @@ package com.ufoscout.vertxk.http
 import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.await
 import com.ufoscout.vertxk.awaitResult
-import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpClientResponse
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -15,17 +13,9 @@ import org.junit.Test
 
 class HelloWorldTest : BaseTest() {
 
-    private val vertx = Vertx.vertx()
-
     @Before
     fun setUp() = runBlocking<Unit> {
-        awaitResult<String> { vertx.deployVerticle(HelloWorldVerticle::class.java!!.getName(), it) }
-    }
-
-
-    @After
-    fun tearDown() = runBlocking<Unit> {
-        awaitResult<Void> { vertx.close(it) }
+        awaitResult<String> { vertx.deployVerticle(HelloWorldVertxkVerticle::class.java!!.getName(), it) }
     }
 
     @Test
