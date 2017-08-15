@@ -70,7 +70,7 @@ class VertxkCoroutineTest : BaseTest() {
     @Test
     fun shouldAwaitAFutureCompletion() = runBlocking<Unit> {
         val httpServerFuture = Future.future<HttpServer>()
-        vertx.createHttpServer().requestHandler({ _ -> }).listen(8000, httpServerFuture.completer())
+        vertx.createHttpServer().requestHandler({ _ -> }).listen(0, httpServerFuture.completer())
         //we can get httpServer by await on future instance.
         val httpServer = httpServerFuture.await()
 
@@ -81,10 +81,10 @@ class VertxkCoroutineTest : BaseTest() {
     @Test
     fun shouldAwaitMultipleFuturesCompletion() = runBlocking<Unit> {
         val future1 = Future.future<HttpServer>()
-        vertx.createHttpServer().requestHandler({ _ -> }).listen(8000, future1.completer())
+        vertx.createHttpServer().requestHandler({ _ -> }).listen(0, future1.completer())
 
         val future2 = Future.future<HttpServer>()
-        vertx.createHttpServer().requestHandler({ _ -> }).listen(8001, future2.completer())
+        vertx.createHttpServer().requestHandler({ _ -> }).listen(0, future2.completer())
 
         val result = CompositeFuture.all(future1, future2).await()
         Assert.assertTrue(result.succeeded())

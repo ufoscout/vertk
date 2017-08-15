@@ -7,10 +7,15 @@ import io.vertx.core.http.HttpServer
 class HelloWorldVertxkVerticle : VertxkVerticle() {
 
     override suspend fun vertxkStart() {
-        awaitResult<HttpServer> {
+        val server = awaitResult<HttpServer> {
             vertx.createHttpServer()
                     .requestHandler { r -> r.response().end("Hello, World!") }
-                    .listen(8080, it)
+                    .listen(0, it)
         }
+        port = server.actualPort()
+    }
+
+    companion object {
+        var port: Int = 0;
     }
 }
