@@ -1,6 +1,5 @@
 package com.ufoscout.vertxk
 
-import com.ufoscout.vertxk.http.HelloWorldVertxkVerticle
 import io.vertx.core.Vertx
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After

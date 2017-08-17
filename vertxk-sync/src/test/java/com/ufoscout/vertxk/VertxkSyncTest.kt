@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger
 /**
  * Created by ufo on 15/08/17.
  */
-class VertxkCoroutineTest : BaseTest() {
+class VertxkSyncTest : BaseTest() {
 
     @Test
     fun shouldAwaitASingleEvent() = runBlocking<Unit> {

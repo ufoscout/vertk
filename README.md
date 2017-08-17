@@ -1,1 +1,1 @@
-# vertx-sync-kotlin
+# vertxk
