@@ -5,7 +5,7 @@ import com.github.salomonbrys.kodein.jxinject.jx
 import io.vertx.core.Verticle
 import io.vertx.core.spi.VerticleFactory
 
-class VertxkKodeinVerticleFactory(val kodein: Kodein) : VerticleFactory {
+internal class VertxkKodeinVerticleFactory(val kodein: Kodein) : VerticleFactory {
 
     override fun prefix(): String {
         return VertxkKodein.PREFIX

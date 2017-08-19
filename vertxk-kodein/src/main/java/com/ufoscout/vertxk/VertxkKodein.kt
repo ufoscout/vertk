@@ -15,6 +15,9 @@ class VertxkKodein {
     companion object {
         val PREFIX = "vertxk-kodein"
 
+        /**
+         * Return a [Kodein.Module] with basic [Vertx] object bound as singleton.
+         */
         fun module(vertx: Vertx) = Kodein.Module {
             bind<Vertx>() with singleton { vertx }
             bind<EventBus>() with singleton { vertx.eventBus() }
@@ -22,29 +25,29 @@ class VertxkKodein {
             bind<SharedData>() with singleton { vertx.sharedData() }
         }
 
-        fun registerFactory(vertx: Vertx, kodein: Kodein) {
-            registerFactory(vertx, VertxkKodeinVerticleFactory(kodein))
-        }
-
-        fun registerFactory(vertx: Vertx, factory: VerticleFactory) {
-            vertx.registerVerticleFactory(factory)
-        }
-
         /**
-         * Deploy a verticle instance given a class of the verticle using default deployment options
-         * and [GuiceVerticleFactory] factory.
+         * Register a [Kodein] aware [VerticleFactory] in a [Vertx] instance.
+         * This factory handles Verticles deployed
+         * with the [PREFIX] prefix and allows dependency injection of Kodein managed services.
+         */
+        fun registerFactory(vertx: Vertx, kodein: Kodein) {
+            vertx.registerVerticleFactory(VertxkKodeinVerticleFactory(kodein))
+        }
+        /**
+         * Deploy a [Verticle] in a [Vertx] instance using the default deployment options
+         * and [VertxkKodeinVerticleFactory] factory.
          *
-         * @param verticleClazz the class of the verticle to deploy.
+         * @param vertx The [Vertx] instance where the [Verticle] is deployed.
          */
         inline fun <reified T : Verticle> deployVerticle(vertx: Vertx) {
             deployVerticle<T>(vertx, DeploymentOptions())
         }
 
         /**
-         * Like [.deployVerticle] but [io.vertx.core.DeploymentOptions] are provided to configure the
-         * deployment.
+         * Deploy a [Verticle] in a [Vertx] instance
+         * and [VertxkKodeinVerticleFactory] factory.
          *
-         * @param verticleClazz  the class of the verticle to deploy.
+         * @param vertx The [Vertx] instance where the [Verticle] is deployed.
          * @param options  the deployment options.
          */
         inline fun <reified T : Verticle> deployVerticle(vertx: Vertx, options: DeploymentOptions) {
@@ -53,10 +56,10 @@ class VertxkKodein {
 
 
         /**
-         * Like [.deployVerticle] but handler can be provided
-         * which will be notified when the deployment is complete.
+         * Deploy a [Verticle] in a [Vertx] instance using the default deployment options
+         * and [VertxkKodeinVerticleFactory] factory.
          *
-         * @param verticleClazz  the class of the verticle to deploy.
+         * @param vertx The [Vertx] instance where the [Verticle] is deployed.
          * @param completionHandler  a handler which will be notified when the deployment is complete.
          */
         inline fun <reified T : Verticle> deployVerticle(vertx: Vertx, completionHandler: Handler<AsyncResult<String>>) {
@@ -64,10 +67,10 @@ class VertxkKodein {
         }
 
         /**
-         * Like [.deployVerticle] but handler can be provided
-         * which will be notified when the deployment is complete.
+         * Deploy a [Verticle] in a [Vertx] instance using
+         * and [VertxkKodeinVerticleFactory] factory.
          *
-         * @param verticleClazz  the class of the verticle to deploy.
+         * @param vertx The [Vertx] instance where the [Verticle] is deployed.
          * @param options  the deployment options.
          * @param completionHandler  a handler which will be notified when the deployment is complete.
          */
@@ -77,10 +80,7 @@ class VertxkKodein {
 
         /**
          * Gets the name of the verticle with adding prefix required to notify vertx to use
-         * @{@link GuiceVerticleFactory} factory for verticle creation.
-         *
-         * @param verticleClazz the class of the verticle to deploy.
-         * @return Name of the verticle which can be used for deployment to vertx.
+         * [VertxkKodeinVerticleFactory] factory for verticle creation.
          */
         inline fun <reified T : Verticle> getFullVerticleName(): String {
             return PREFIX + ":" + T::class.java.canonicalName

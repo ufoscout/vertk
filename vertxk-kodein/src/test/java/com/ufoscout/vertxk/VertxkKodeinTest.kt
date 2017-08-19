@@ -3,6 +3,8 @@ package com.ufoscout.vertxk
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
+import com.github.salomonbrys.kodein.jxinject.JxInjector
+import com.github.salomonbrys.kodein.jxinject.jx
 import com.github.salomonbrys.kodein.jxinject.jxInjectorModule
 import com.github.salomonbrys.kodein.singleton
 import com.ufoscout.vertxk.stub.CoroutinesVerticle
@@ -35,19 +37,6 @@ class VertxkKodeinTest: BaseTest() {
         VertxkKodein.registerFactory(spiedVertx, kodein)
 
         Mockito.verify(spiedVertx, Mockito.times(1)).registerVerticleFactory(Mockito.any())
-    }
-
-    @Test
-    fun shouldUseTheVertxkKodeinFactory() {
-        val factory = Mockito.mock(VerticleFactory::class.java)
-        Mockito.`when`(factory.prefix()).thenReturn(VertxkKodein.PREFIX)
-
-        VertxkKodein.registerFactory(vertx, factory)
-        VertxkKodein.deployVerticle<SimpleVerticle>(vertx)
-
-        val name = VertxkKodein.getFullVerticleName<SimpleVerticle>()
-
-        Mockito.verify(factory, Mockito.times(1)).createVerticle(Mockito.eq(name), Mockito.any())
     }
 
     @Test
