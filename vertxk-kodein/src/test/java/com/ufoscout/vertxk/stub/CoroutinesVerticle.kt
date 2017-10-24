@@ -1,11 +1,11 @@
 package com.ufoscout.vertxk.stub
 
-import com.ufoscout.vertxk.VertxkVerticle
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 import kotlinx.coroutines.experimental.runBlocking
 
-class CoroutinesVerticle(val name: String) : VertxkVerticle() {
+class CoroutinesVerticle(val name: String) : CoroutineVerticle() {
 
-    override suspend fun vertxkStart() {
+    override suspend fun start() {
         runBlocking {
             STARTED = true
             NAME = name

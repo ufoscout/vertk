@@ -1,6 +1,7 @@
 package com.ufoscout.vertxk
 
 import io.vertx.core.Vertx
+import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.After
 import org.junit.Before

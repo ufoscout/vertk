@@ -3,8 +3,6 @@ package com.ufoscout.vertxk
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.jxinject.JxInjector
-import com.github.salomonbrys.kodein.jxinject.jx
 import com.github.salomonbrys.kodein.jxinject.jxInjectorModule
 import com.github.salomonbrys.kodein.singleton
 import com.ufoscout.vertxk.stub.CoroutinesVerticle
@@ -13,7 +11,7 @@ import io.vertx.core.Vertx
 import io.vertx.core.eventbus.EventBus
 import io.vertx.core.file.FileSystem
 import io.vertx.core.shareddata.SharedData
-import io.vertx.core.spi.VerticleFactory
+import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert
 import org.junit.Test
