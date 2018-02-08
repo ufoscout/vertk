@@ -110,3 +110,5 @@ Instantiate Vertx and Kodein:
 
 Cheers.
 
+A complete working exmple can be found at [https://github.com/ufoscout/kotlin-vertx3](https://github.com/ufoscout/kotlin-vertx3)
+
