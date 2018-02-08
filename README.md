@@ -3,9 +3,11 @@
 Vertxk is a set of tools to simplify [Vertx](http://vertx.io/) application development in [Kotlin Programming Language](https://kotlinlang.org/) 
 
 ## VertxK: Dependency injection with [Kodein](https://github.com/SalomonBrys/Kodein)
-[Kodein](https://github.com/SalomonBrys/Kodein) is a simple, easy to use and easy to configure and yet very useful dependency retrieval container.
+[Kodein](https://github.com/SalomonBrys/Kodein) is a simple, easy to use and easy to configure dependency retrieval container.
 
-By default Vertx does not provide any support for dependency injection framerworks. Vertxk solves this issue enabling simple DI in Vertx Verticles through Kodein. 
+By default, Vertx does not provide any real support for dependency injection framerworks. 
+
+Vertxk solves this issue enabling simple DI in Vertx Verticles through Kodein. 
 
 BTW, it works with coroutines too!
 
@@ -31,10 +33,16 @@ Getting Started
 2. Inject the VertxkKodein Module in your Kodein Container:
 
 ```Kotlin
+import com.github.salomonbrys.kodein.Kodein
+import com.github.salomonbrys.kodein.jxinject.jxInjectorModule
+import com.ufoscout.vertxk.VertxkKodein
+...
+
         // setup vertx
         val vertx = Vertx.vertx()
 
         val kodein = Kodein {
+            import(jxInjectorModule)
             import(VertxkKodein.module(vertx))
             import(// IMPORT YOUR MODULES)
         }
@@ -52,7 +60,7 @@ Getting Started
         VertxkKodein.registerFactory(vertx, kodein)
 ```
 
-4. Everything's ready now! You can already inject whatever bean in your Verticles:
+4. Everything's ready now! You can now inject whatever bean in your Verticles:
 
 ```Kotlin
 // In this example I use a Coroutine based Verticle. 
@@ -97,6 +105,7 @@ Instantiate Vertx and Kodein:
         val vertx = Vertx.vertx()
 
         val kodein = Kodein {
+            import(jxInjectorModule)
             import(VertxkKodein.module(vertx))
             import(// IMPORT YOUR MODULES)
         }
