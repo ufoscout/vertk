@@ -1,9 +1,9 @@
 package com.ufoscout.vertxk
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.jxinject.jx
 import io.vertx.core.Verticle
 import io.vertx.core.spi.VerticleFactory
+import org.kodein.di.Kodein
+import org.kodein.di.jxinject.jx
 
 internal class VertxkKodeinVerticleFactory(val kodein: Kodein) : VerticleFactory {
 

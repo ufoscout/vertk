@@ -1,13 +1,13 @@
 package com.ufoscout.vertxk
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.singleton
 import io.vertx.core.*
 import io.vertx.core.eventbus.EventBus
 import io.vertx.core.file.FileSystem
 import io.vertx.core.shareddata.SharedData
 import io.vertx.core.spi.VerticleFactory
+import org.kodein.di.Kodein
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.singleton
 
 
 class VertxkKodein {

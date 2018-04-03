@@ -1,10 +1,5 @@
 package com.ufoscout.vertxk
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.jxinject.jxInjectorModule
-import com.github.salomonbrys.kodein.singleton
 import com.ufoscout.vertxk.stub.CoroutinesVerticle
 import com.ufoscout.vertxk.stub.SimpleVerticle
 import io.vertx.core.Vertx
@@ -15,6 +10,11 @@ import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert
 import org.junit.Test
+import org.kodein.di.Kodein
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.singleton
+import org.kodein.di.jxinject.jxInjectorModule
 import org.mockito.Mockito
 import java.util.*
 
