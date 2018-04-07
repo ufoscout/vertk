@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ufoscout.vertxk</groupId>
   <artifactId>vertxk-parent</artifactId>
-  <version>0.3.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <packaging>pom</packaging>
 
   <name>vertxk</name>
@@ -34,7 +34,7 @@
   <scm>
     <connection>scm:git:ssh://github.com/ufoscout/vertxk.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ufoscout/vertxk.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>1.0.0</tag>
     <url>http://github.com/ufoscout/vertxk</url>
   </scm>
 
