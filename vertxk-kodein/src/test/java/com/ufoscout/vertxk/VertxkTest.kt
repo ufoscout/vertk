@@ -2,16 +2,9 @@ package com.ufoscout.vertxk
 
 import com.ufoscout.vertxk.stub.CoroutinesVerticle
 import com.ufoscout.vertxk.stub.StubModule
-import com.ufoscout.vertxk.util.VertxkKodein
-import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert
 import org.junit.Test
-import org.kodein.di.Kodein
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.singleton
-import org.kodein.di.jxinject.jxInjectorModule
-import java.util.*
 
 class VertxkTest: BaseTest() {
 

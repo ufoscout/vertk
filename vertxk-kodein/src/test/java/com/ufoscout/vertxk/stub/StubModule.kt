@@ -1,8 +1,6 @@
 package com.ufoscout.vertxk.stub
 
 import com.ufoscout.vertxk.VertxkModule
-import io.vertx.core.DeploymentOptions
-import io.vertx.core.Verticle
 import io.vertx.core.Vertx
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
