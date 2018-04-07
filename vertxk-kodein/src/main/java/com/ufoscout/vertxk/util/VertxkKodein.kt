@@ -1,4 +1,4 @@
-package com.ufoscout.vertxk
+package com.ufoscout.vertxk.util
 
 import io.vertx.core.*
 import io.vertx.core.eventbus.EventBus

@@ -1,5 +1,6 @@
-package com.ufoscout.vertxk
+package com.ufoscout.vertxk.util
 
+import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.stub.SimpleVerticle
 import com.ufoscout.vertxk.stub.VerticleWithDependencies
 import org.junit.Assert
