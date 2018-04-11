@@ -43,7 +43,7 @@ object Vertxk {
     private fun build(builder: Kodein.MainBuilder, vararg modules: VertxkModule) {
         for (module in modules) {
             log.debug("Import Kodein Module from ${module.javaClass.name}")
-            builder.import(module.module())
+            builder.import(module.module(), allowOverride = true)
         }
     }
 }
