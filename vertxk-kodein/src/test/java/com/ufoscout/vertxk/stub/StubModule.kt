@@ -2,6 +2,7 @@ package com.ufoscout.vertxk.stub
 
 import com.ufoscout.vertxk.VertxkModule
 import io.vertx.core.Vertx
+import org.kodein.di.DKodein
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.singleton
@@ -28,7 +29,7 @@ class StubModule: VertxkModule() {
         }
     }
 
-    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
+    override suspend fun onInit(vertx: Vertx, kodein: DKodein) {
         ON_INIT_CALLED = true
         deployVerticle<SimpleVerticle>(vertx)
         deployVerticle<CoroutinesVerticle>(vertx, DEPLOYMENT_OPTIONS)

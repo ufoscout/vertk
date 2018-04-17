@@ -4,20 +4,22 @@ import com.ufoscout.vertxk.util.VertxkKodein
 import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import kotlinx.coroutines.experimental.runBlocking
+import org.kodein.di.DKodein
 import org.kodein.di.Kodein
+import org.kodein.di.direct
 import org.kodein.di.jxinject.jxInjectorModule
 
 object Vertxk {
 
     private val log = LoggerFactory.getLogger(Vertxk::class.java)
 
-    fun start(vertx: Vertx, vararg modules: VertxkModule): Kodein {
+    fun start(vertx: Vertx, vararg modules: VertxkModule): DKodein {
         return runBlocking {
             launch(vertx, *modules)
         }
     }
 
-    suspend fun launch(vertx: Vertx, vararg modules: VertxkModule): Kodein {
+    suspend fun launch(vertx: Vertx, vararg modules: VertxkModule): DKodein {
 
         log.info("Vertxk initialization start...")
 
@@ -30,14 +32,15 @@ object Vertxk {
 
         VertxkKodein.registerFactory(vertx, kodein)
 
+        var dKodein = kodein.direct
         for (module in modules) {
             log.debug("Initialize Module from ${module.javaClass.name}")
-            module.onInit(vertx, kodein)
+            module.onInit(vertx, dKodein)
         }
 
         log.info("Vertxk initialization completed")
 
-        return kodein
+        return dKodein
     }
 
     private fun build(builder: Kodein.MainBuilder, vararg modules: VertxkModule) {

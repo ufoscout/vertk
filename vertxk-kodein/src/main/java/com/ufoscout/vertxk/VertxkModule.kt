@@ -6,6 +6,7 @@ import io.vertx.core.DeploymentOptions
 import io.vertx.core.Verticle
 import io.vertx.core.Vertx
 import io.vertx.kotlin.coroutines.awaitResult
+import org.kodein.di.DKodein
 import org.kodein.di.Kodein
 
 abstract class VertxkModule {
@@ -20,7 +21,7 @@ abstract class VertxkModule {
      * Initialization entry point for the the [VertxkModule].
      * All [Verticle]s that belong to the module should be deployed here.
      */
-    abstract suspend fun onInit(vertx: Vertx, kodein: Kodein)
+    abstract suspend fun onInit(vertx: Vertx, kodein: DKodein)
 
     /**
      * Deploy a [Verticle] in a [Vertx] instance using the default deployment options.
