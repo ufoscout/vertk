@@ -64,9 +64,9 @@
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin.version>1.2.30</kotlin.version>
 
-    <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
+    <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-    <dokka-maven-plugin.version>0.9.15</dokka-maven-plugin.version>
+    <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
   </properties>
 
   <dependencyManagement>
