@@ -8,17 +8,24 @@
     <artifactId>vertxk-parent</artifactId>
     <version>1.1.4-SNAPSHOT</version>
   </parent>
-  <artifactId>vertxk-kodein</artifactId>
+  <artifactId>vertxk-core</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>com.ufoscout.vertxk</groupId>
-      <artifactId>vertxk-core</artifactId>
-      <version>${project.version}</version>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jre8</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.kodein.di</groupId>
-      <artifactId>kodein-di-generic-jvm</artifactId>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-lang-kotlin-coroutines</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
