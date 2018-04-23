@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <!-- POM file generated with GWT webAppCreator -->
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ufoscout.vertxk</groupId>
@@ -133,33 +134,17 @@
         <executions>
           <execution>
             <id>compile</id>
-            <!-- <phase>compile</phase> -->
-            <phase>process-sources</phase>
+            <phase>compile</phase>
             <goals>
               <goal>compile</goal>
             </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/main/java</source>
-                <source>src/main/kotlin</source>
-                <source>src/main/resources</source>
-              </sourceDirs>
-            </configuration>
           </execution>
           <execution>
             <id>test-compile</id>
-            <!-- <phase>test-compile</phase> -->
-            <phase>process-test-sources</phase>
+            <phase>test-compile</phase>
             <goals>
               <goal>test-compile</goal>
             </goals>
-            <configuration>
-              <sourceDirs>
-                <source>src/test/java</source>
-                <source>src/test/kotlin</source>
-                <source>src/test/resources</source>
-              </sourceDirs>
-            </configuration>
           </execution>
         </executions>
         <configuration>
