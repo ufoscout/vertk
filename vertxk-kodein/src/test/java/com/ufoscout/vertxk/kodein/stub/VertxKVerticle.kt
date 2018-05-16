@@ -1,9 +1,9 @@
 package com.ufoscout.vertxk.kodein.stub
 
-import com.ufoscout.vertxk.kodein.VertxKComponent
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 import java.util.concurrent.atomic.AtomicInteger
 
-class VertxKComponentImpl(val name: String) : VertxKComponent {
+class VertxKVerticle(val name: String) : CoroutineVerticle() {
 
     override suspend fun start() {
         STARTED = true

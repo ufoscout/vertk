@@ -88,6 +88,11 @@
         <version>${kodein.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.kodein.di</groupId>
+        <artifactId>kodein-di-jx-inject-jvm</artifactId>
+        <version>${kodein.version}</version>
+      </dependency>
+      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
