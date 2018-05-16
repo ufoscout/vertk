@@ -61,7 +61,7 @@
     <vertx.version>3.5.1</vertx.version>
 
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin.version>1.2.30</kotlin.version>
+    <kotlin.version>1.2.40</kotlin.version>
 
     <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>

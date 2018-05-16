@@ -1,8 +1,6 @@
 package com.ufoscout.vertxk
 
-import io.vertx.core.DeploymentOptions
-import io.vertx.core.Verticle
-import io.vertx.core.Vertx
+import io.vertx.core.*
 import io.vertx.kotlin.coroutines.awaitResult
 import kotlin.reflect.KClass
 
@@ -12,6 +10,20 @@ interface VertxExt {
         awaitResult<String> {
             deployVerticle(kClass.javaObjectType, deploymentOptions, it)
         }
+    }
+
+    suspend fun <R> Vertx.executeBlocking(action: () -> R, ordered: Boolean = true): R {
+        return awaitResult<R> {
+            val handler: Handler<Future<R>> = Handler {
+                try {
+                    it.complete(action())
+                } catch (e: Throwable) {
+                    it.fail(e)
+                }
+            }
+            executeBlocking(handler, ordered, it)
+        }
+
     }
 
 }
