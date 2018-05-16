@@ -24,7 +24,7 @@ class StubModule(val deploymentOptions: DeploymentOptions = DeploymentOptions())
     }
 
     override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
-        vertx.deployKodeinVerticle<VertxKVerticle>(deploymentOptions)
+        vertx.deployKodeinVerticle<VertxKVerticleImpl>(deploymentOptions)
     }
 
 }

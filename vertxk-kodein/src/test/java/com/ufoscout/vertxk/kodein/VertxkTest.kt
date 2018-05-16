@@ -3,10 +3,9 @@ package com.ufoscout.vertxk.kodein
 import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.kodein.stub.VertxKComponentImpl
 import com.ufoscout.vertxk.kodein.stub.StubModule
-import com.ufoscout.vertxk.kodein.stub.VertxKVerticle
+import com.ufoscout.vertxk.kodein.stub.VertxKVerticleImpl
 import io.vertx.core.DeploymentOptions
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
@@ -17,7 +16,7 @@ class VertxkTest: BaseTest() {
     @Before
     fun setUp() {
         VertxKComponentImpl.RESET();
-        VertxKVerticle.RESET();
+        VertxKVerticleImpl.RESET();
     }
 
     @Test
@@ -28,9 +27,9 @@ class VertxkTest: BaseTest() {
         assertEquals(StubModule.RANDOM_NAME, VertxKComponentImpl.NAME)
         assertEquals(1, VertxKComponentImpl.COUNT.get())
 
-        assertTrue(VertxKVerticle.STARTED)
-        assertEquals(StubModule.RANDOM_NAME, VertxKVerticle.NAME)
-        assertEquals(1, VertxKVerticle.COUNT.get())
+        assertTrue(VertxKVerticleImpl.STARTED)
+        assertEquals(StubModule.RANDOM_NAME, VertxKVerticleImpl.NAME)
+        assertEquals(1, VertxKVerticleImpl.COUNT.get())
 
     }
 
@@ -46,9 +45,9 @@ class VertxkTest: BaseTest() {
         assertEquals(StubModule.RANDOM_NAME, VertxKComponentImpl.NAME)
         assertEquals(1, VertxKComponentImpl.COUNT.get())
 
-        assertTrue(VertxKVerticle.STARTED)
-        assertEquals(StubModule.RANDOM_NAME, VertxKVerticle.NAME)
-        assertEquals(instances, VertxKVerticle.COUNT.get())
+        assertTrue(VertxKVerticleImpl.STARTED)
+        assertEquals(StubModule.RANDOM_NAME, VertxKVerticleImpl.NAME)
+        assertEquals(instances, VertxKVerticleImpl.COUNT.get())
 
     }
 }
