@@ -1,4 +1,4 @@
-package com.weweb.core.json
+package com.ufoscout.vertxk.kodein.json
 
 import com.ufoscout.vertxk.kodein.VertxKComponent
 import java.io.OutputStream

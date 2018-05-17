@@ -1,14 +1,9 @@
-package com.weweb.core.web
+package com.ufoscout.vertxk.kodein.router
 
 import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.K
 import com.ufoscout.vertxk.kodein.VertxK
 import com.ufoscout.vertxk.kodein.config.RouterConfig
-import com.ufoscout.vertxk.kodein.router.RouterModule
-import com.ufoscout.vertxk.kodein.router.RouterTestModule
-import com.ufoscout.vertxk.kodein.router.ErrorDetails
-import com.ufoscout.vertxk.kodein.router.WebExceptionService
-import com.weweb.core.service.RouterService
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Before

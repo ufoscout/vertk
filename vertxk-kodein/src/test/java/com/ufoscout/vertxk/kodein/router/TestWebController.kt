@@ -1,10 +1,6 @@
-package com.weweb.core.web
+package com.ufoscout.vertxk.kodein.router
 
 import com.ufoscout.vertxk.kodein.VertxKVerticle
-import com.ufoscout.vertxk.kodein.router.WebException
-import com.ufoscout.vertxk.kodein.router.WebExceptionService
-import com.ufoscout.vertxk.kodein.router.registerTransformer
-import com.weweb.core.service.RouterService
 
 class TestWebController(val routerService: RouterService, val webExceptionService: WebExceptionService): VertxKVerticle() {
 

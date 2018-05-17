@@ -1,4 +1,4 @@
-package com.weweb.core.json
+package com.ufoscout.vertxk.kodein.json
 
 import io.vertx.core.json.Json
 import java.io.IOException

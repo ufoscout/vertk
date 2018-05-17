@@ -1,4 +1,4 @@
-package com.weweb.core.web
+package com.ufoscout.vertxk.kodein.router
 
 class CustomTestException: RuntimeException() {
 }

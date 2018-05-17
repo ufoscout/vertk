@@ -1,12 +1,8 @@
-package com.weweb.core.exception
+package com.ufoscout.vertxk.kodein.router
 
 import com.ufoscout.vertxk.BaseTest
-import com.ufoscout.vertxk.kodein.router.WebException
-import com.ufoscout.vertxk.kodein.router.WebExceptionService
-import com.ufoscout.vertxk.kodein.router.WebExceptionServiceImpl
-import com.ufoscout.vertxk.kodein.router.registerTransformer
 import junit.framework.Assert.assertNull
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class WebExceptionServiceTest : BaseTest() {

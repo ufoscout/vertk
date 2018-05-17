@@ -1,8 +1,7 @@
-package com.weweb.core.json
+package com.ufoscout.vertxk.kodein.json
 
 import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.kodein.VertxK
-import com.ufoscout.vertxk.kodein.json.JsonModule
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Before

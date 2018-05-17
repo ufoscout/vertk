@@ -1,4 +1,4 @@
-package com.weweb.core.service
+package com.ufoscout.vertxk.kodein.router
 
 import com.ufoscout.vertxk.kodein.config.RouterConfig
 import com.ufoscout.vertxk.kodein.router.ErrorDetails

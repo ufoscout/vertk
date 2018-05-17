@@ -1,4 +1,4 @@
-package com.weweb.core.json
+package com.ufoscout.vertxk.kodein.json
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationFeature

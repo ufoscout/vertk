@@ -2,10 +2,8 @@ package com.ufoscout.vertxk.kodein.router
 
 import com.ufoscout.vertxk.kodein.VertxKModule
 import com.ufoscout.vertxk.kodein.config.RouterConfig
-import com.weweb.core.json.JacksonJsonSerializerService
-import com.weweb.core.json.JsonSerializerService
-import com.weweb.core.service.RouterService
-import com.weweb.core.service.RouterServiceImpl
+import com.ufoscout.vertxk.kodein.json.JacksonJsonSerializerService
+import com.ufoscout.vertxk.kodein.json.JsonSerializerService
 import io.vertx.core.Vertx
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind

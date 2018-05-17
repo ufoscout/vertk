@@ -1,4 +1,4 @@
-package com.weweb.core.json
+package com.ufoscout.vertxk.kodein.json
 
 import java.time.LocalDate
 
