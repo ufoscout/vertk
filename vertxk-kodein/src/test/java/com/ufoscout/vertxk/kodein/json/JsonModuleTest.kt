@@ -1,5 +1,6 @@
 package com.ufoscout.vertxk.kodein.json
 
+import com.ufoscout.coreutils.json.kotlin.JsonSerializerService
 import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.kodein.VertxK
 import kotlinx.coroutines.experimental.runBlocking

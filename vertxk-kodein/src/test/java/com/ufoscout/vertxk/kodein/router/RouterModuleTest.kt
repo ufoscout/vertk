@@ -4,6 +4,7 @@ import com.ufoscout.vertxk.BaseTest
 import com.ufoscout.vertxk.K
 import com.ufoscout.vertxk.kodein.VertxK
 import com.ufoscout.vertxk.kodein.config.RouterConfig
+import com.ufoscout.vertxk.kodein.json.JsonModule
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Before
@@ -28,6 +29,7 @@ class RouterModuleTest: BaseTest(), K {
     @Before
     fun setup() = runBlocking {
         val kodein = VertxK.start(vertx,
+                JsonModule(),
                 RouterModule(RouterConfig(port)),
                 RouterTestModule()
         )
