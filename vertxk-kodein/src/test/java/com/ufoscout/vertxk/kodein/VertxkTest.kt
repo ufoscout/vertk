@@ -1,19 +1,20 @@
 package com.ufoscout.vertxk.kodein
 
 import com.ufoscout.vertxk.BaseTest
-import com.ufoscout.vertxk.kodein.stub.VertxKComponentImpl
 import com.ufoscout.vertxk.kodein.stub.StubModule
+import com.ufoscout.vertxk.kodein.stub.VertxKComponentImpl
 import com.ufoscout.vertxk.kodein.stub.VertxKVerticleImpl
 import io.vertx.core.DeploymentOptions
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class VertxkTest: BaseTest() {
 
-    @Before
+    @BeforeEach
     fun setUp() {
         VertxKComponentImpl.RESET();
         VertxKVerticleImpl.RESET();

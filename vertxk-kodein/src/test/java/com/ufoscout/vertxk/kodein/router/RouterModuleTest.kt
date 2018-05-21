@@ -6,9 +6,9 @@ import com.ufoscout.vertxk.kodein.VertxK
 import com.ufoscout.vertxk.kodein.config.RouterConfig
 import com.ufoscout.vertxk.kodein.json.JsonModule
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.kodein.di.direct
 import org.kodein.di.generic.instance
 import java.io.BufferedReader
@@ -21,12 +21,11 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.stream.Collectors
 
-
 class RouterModuleTest: BaseTest(), K {
 
     val port = getFreePort()
 
-    @Before
+    @BeforeEach
     fun setup() = runBlocking {
         val kodein = VertxK.start(vertx,
                 JsonModule(),

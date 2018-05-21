@@ -4,27 +4,30 @@ import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerRequest
+import io.vertx.core.logging.LoggerFactory
 import io.vertx.ext.web.Router
 import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.*
-import org.junit.rules.TestName
-import java.math.BigDecimal
+import org.junit.jupiter.api.*
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.util.*
 
 abstract class BaseTest: K {
 
-    @Rule @JvmField
-    val name = TestName()
-
-    private var startTime: Date? = null
+    private val logger = LoggerFactory.getLogger(this.javaClass)
+    private var testStartDate: Long = 0
 
     companion object {
+
+        protected val TIME_FORMAT = DecimalFormat("####,###.###", DecimalFormatSymbols(Locale.US))
+        private val TEMP_DIR = "./target/junit-temp/" + System.currentTimeMillis()
+
         var vertx = Vertx.vertx()
         var router = Router.router(vertx)
         var port = 0
 
-        @BeforeClass @JvmStatic
+        @BeforeAll @JvmStatic
         fun baseSetUp() = runBlocking<Unit> {
             vertx = Vertx.vertx()
             router = Router.router(Companion.vertx)
@@ -37,29 +40,29 @@ abstract class BaseTest: K {
             }
         }
 
-        @AfterClass @JvmStatic
+        @AfterAll @JvmStatic
         fun baseTearDown() = runBlocking<Unit> {
             awaitResult<Void> { vertx.close(it) }
         }
 
     }
 
-    @Before
-    fun setUpBeforeTest() {
-        startTime = Date()
-        println("===================================================================")
-        println("BEGIN TEST " + name.methodName)
-        println("===================================================================")
+    @BeforeEach
+    fun setUpBeforeTest(testInfo: TestInfo) {
+        testStartDate = System.currentTimeMillis()
+        logger.info("===================================================================")
+        logger.info("BEGIN TEST " + testInfo.displayName)
+        logger.info("===================================================================")
 
     }
 
-    @After
-    fun tearDownAfterTest() {
-        val time = BigDecimal(Date().time - startTime!!.time).divide(BigDecimal(1000)).toString()
-        println("===================================================================")
-        println("END TEST " + name.methodName)
-        println("Execution time: $time seconds")
-        println("===================================================================")
+    @AfterEach
+    fun tearDownAfterTest(testInfo: TestInfo) {
+        val executionTime = System.currentTimeMillis() - testStartDate
+        logger.info("===================================================================")
+        logger.info("END TEST " + testInfo.displayName)
+        logger.info("execution time: " + TIME_FORMAT.format(executionTime) + " ms")
+        logger.info("===================================================================")
     }
 
 }

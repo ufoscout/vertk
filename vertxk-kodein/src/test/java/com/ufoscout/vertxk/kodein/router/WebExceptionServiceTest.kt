@@ -1,9 +1,9 @@
 package com.ufoscout.vertxk.kodein.router
 
 import com.ufoscout.vertxk.BaseTest
-import junit.framework.Assert.assertNull
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Test
 
 class WebExceptionServiceTest : BaseTest() {
 

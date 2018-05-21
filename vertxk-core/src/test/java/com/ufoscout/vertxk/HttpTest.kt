@@ -1,18 +1,19 @@
 package com.ufoscout.vertxk
 
+import com.ufoscout.vertxk.verticle.HttpVerticle
 import com.ufoscout.vertxk.verticle.RequestDTO
 import com.ufoscout.vertxk.verticle.ResponseDTO
-import com.ufoscout.vertxk.verticle.HttpVerticle
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.*
-import org.junit.BeforeClass
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import java.util.*
 
 class HttpTest: BaseTest() {
 
     companion object {
-        @BeforeClass @JvmStatic
+        @BeforeAll @JvmStatic
         fun deployStubVerticle() = runBlocking<Unit> {
             vertx.deployVerticle<HttpVerticle>()
         }

@@ -1,8 +1,10 @@
 package com.ufoscout.vertxk
 
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.Assert.*
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
