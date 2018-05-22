@@ -1,5 +1,6 @@
 package com.ufoscout.vertxk.kodein.auth
 
+import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.auth.AuthContext
 import com.ufoscout.coreutils.auth.AuthService
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
@@ -18,6 +19,10 @@ class AuthContextServiceImpl(val authService: AuthService<Long>, val jwtService:
             return authService.auth(user)
         }
         return return authService.auth(User("", 0L))
+    }
+
+    override fun <R> generateToken(auth: Auth<R>): String {
+        return jwtService.generate(auth.username, auth)
     }
 
 }
