@@ -41,7 +41,7 @@ object VertxK {
 
         log.info("Initialized VertxKModules...")
         for (module in modules) {
-            log.debug("Initialize VertxKModule [${module.javaClass.name}]")
+            log.info("Initialize VertxKModule [${module.javaClass.name}]")
             module.onInit(vertx, kodein)
         }
 
