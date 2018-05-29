@@ -76,6 +76,7 @@
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     <dokka-maven-plugin.version>0.9.16</dokka-maven-plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+    <nexus-staging-maven-plugin>1.6.8</nexus-staging-maven-plugin>
 
   </properties>
 
@@ -170,6 +171,13 @@
             <target>${java.version}</target>
           </configuration>
         </plugin>
+        <!-- <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin> -->
       </plugins>
     </pluginManagement>
     <plugins>
@@ -250,6 +258,17 @@
             <version>${junit-platform-surefire-provider.version}</version>
           </dependency>
         </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>${nexus-staging-maven-plugin}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>nexus-sonatype-release</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+        </configuration>
       </plugin>
     </plugins>
   </build>
