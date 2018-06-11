@@ -8,7 +8,7 @@ object MailClientFactory {
 
     fun build(mailConfig: MailConfig, vertx: Vertx): MailClient {
         return when (mailConfig.clientType) {
-            VERTX -> VertxMailClient(mailConfig, vertx)
+            VERTX -> VertxMailClient(mailConfig.config, vertx)
             else -> { // Note the block
                 NoOpsMailClient()
             }

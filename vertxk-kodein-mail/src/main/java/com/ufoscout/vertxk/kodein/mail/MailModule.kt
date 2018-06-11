@@ -10,7 +10,7 @@ import org.kodein.di.generic.singleton
 class MailModule(private val mailConfig: MailConfig): VertxKModule {
 
     override fun module() = Kodein.Module {
-        bind<MailClient>() with singleton { VertxMailClient(mailConfig, instance()) }
+        bind<MailClient>() with singleton { MailClientFactory.build(mailConfig, instance()) }
     }
 
     override suspend fun onInit(vertx: Vertx, kodein: Kodein) {

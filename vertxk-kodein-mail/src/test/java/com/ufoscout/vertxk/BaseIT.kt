@@ -30,10 +30,9 @@ abstract class BaseIT : BaseTest(), K {
 
             mailConfig = MailConfig(
                     clientType = MailClientFactory.VERTX,
-                    hostname = mh!!.getContainerIpAddress().toString(),
-                    port = mh!!.getMappedPort(1025),
-                    username = "",
-                    password = ""
+                    config = io.vertx.ext.mail.MailConfig()
+                            .setHostname(mh!!.getContainerIpAddress().toString())
+                            .setPort(mh!!.getMappedPort(1025))
             )
 
             vertx = Vertx.vertx()

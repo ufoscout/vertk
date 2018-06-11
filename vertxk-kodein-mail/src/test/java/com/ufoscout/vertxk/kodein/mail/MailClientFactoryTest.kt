@@ -12,10 +12,7 @@ internal class MailClientFactoryIT: BaseIT() {
     fun shouldReturnVertxMailClient() {
         val mailConfig = MailConfig(
                 clientType = MailClientFactory.VERTX,
-                hostname = globalConfig.hostname,
-                port = globalConfig.port,
-                username = globalConfig.username,
-                password = globalConfig.password
+                config = globalConfig.config
         )
         assertTrue(MailClientFactory.build(mailConfig, vertx()) is VertxMailClient)
     }
@@ -23,11 +20,7 @@ internal class MailClientFactoryIT: BaseIT() {
     @Test
     fun shouldReturnNoOpsMailClientByDefault() {
         val mailConfig = MailConfig(
-                clientType = "",
-                hostname = "",
-                port = 0,
-                username = "",
-                password = ""
+                clientType = ""
         )
         assertTrue(MailClientFactory.build(mailConfig, vertx()) is NoOpsMailClient)
     }
