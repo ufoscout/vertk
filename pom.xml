@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ufoscout.vertk</groupId>
   <artifactId>vertk-parent</artifactId>
-  <version>2.0.1</version>
+  <version>2.0.2-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>vertk</name>
@@ -39,7 +39,7 @@
   <scm>
     <connection>scm:git:ssh://github.com/ufoscout/vertk.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/ufoscout/vertk.git</developerConnection>
-    <tag>2.0.1</tag>
+    <tag>HEAD</tag>
     <url>http://github.com/ufoscout/vertk</url>
   </scm>
 
