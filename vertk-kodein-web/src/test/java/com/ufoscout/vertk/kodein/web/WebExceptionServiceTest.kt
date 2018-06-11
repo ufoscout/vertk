@@ -1,4 +1,4 @@
-package com.ufoscout.vertk.kodein.router
+package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.BaseTest
 import org.junit.jupiter.api.Assertions.assertEquals

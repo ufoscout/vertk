@@ -2,7 +2,6 @@ package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.kodein.auth.AuthContextService
 import com.ufoscout.vertk.kodein.auth.auth
-import com.ufoscout.vertk.kodein.router.RouterService
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 

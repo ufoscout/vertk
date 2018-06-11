@@ -7,39 +7,20 @@
     <artifactId>vertk-parent</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>vertk-kodein</artifactId>
+  <artifactId>vertk-kodein-web</artifactId>
 
   <dependencies>
     <dependency>
       <groupId>com.ufoscout.vertk</groupId>
-      <artifactId>vertk-core</artifactId>
+      <artifactId>vertk-kodein</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout</groupId>
-      <artifactId>coreutils-json-kotlin</artifactId>
+      <groupId>com.ufoscout.vertk</groupId>
+      <artifactId>vertk-web</artifactId>
+      <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.kodein.di</groupId>
-      <artifactId>kodein-di-generic-jvm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kodein.di</groupId>
-      <artifactId>kodein-di-jx-inject-jvm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jdk8</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.module</groupId>
-      <artifactId>jackson-module-kotlin</artifactId>
-    </dependency>
-    <dependency>
+       <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <scope>test</scope>

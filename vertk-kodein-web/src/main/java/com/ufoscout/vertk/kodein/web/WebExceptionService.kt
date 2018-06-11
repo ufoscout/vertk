@@ -1,4 +1,4 @@
-package com.ufoscout.vertk.kodein.router
+package com.ufoscout.vertk.kodein.web
 
 import kotlin.reflect.KClass
 

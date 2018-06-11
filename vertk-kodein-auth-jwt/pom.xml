@@ -12,7 +12,7 @@
   <dependencies>
     <dependency>
       <groupId>com.ufoscout.vertk</groupId>
-      <artifactId>vertk-kodein</artifactId>
+      <artifactId>vertk-kodein-web</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

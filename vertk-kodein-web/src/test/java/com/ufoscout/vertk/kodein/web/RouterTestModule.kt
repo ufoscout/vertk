@@ -1,9 +1,8 @@
-package com.ufoscout.vertk.kodein.router
+package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.VertkKodeinModule
 import com.ufoscout.vertk.kodein.deployKodeinVerticle
-import io.vertx.core.Vertx
 import org.kodein.di.Kodein
 
 class RouterTestModule: VertkKodeinModule {

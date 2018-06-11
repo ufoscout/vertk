@@ -4,9 +4,9 @@ import com.ufoscout.coreutils.auth.UnauthenticatedException
 import com.ufoscout.coreutils.auth.UnauthorizedException
 import com.ufoscout.coreutils.jwt.TokenExpiredException
 import com.ufoscout.vertk.kodein.VertkKodeinStartable
-import com.ufoscout.vertk.kodein.router.WebException
-import com.ufoscout.vertk.kodein.router.WebExceptionService
-import com.ufoscout.vertk.kodein.router.registerTransformer
+import com.ufoscout.vertk.kodein.web.WebException
+import com.ufoscout.vertk.kodein.web.WebExceptionService
+import com.ufoscout.vertk.kodein.web.registerTransformer
 
 class AuthConfig(val webExceptionService: WebExceptionService): VertkKodeinStartable {
 

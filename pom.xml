@@ -31,6 +31,7 @@
     <module>vertk-core</module>
     <module>vertk-web</module>
     <module>vertk-kodein</module>
+    <module>vertk-kodein-web</module>
     <module>vertk-kodein-auth-jwt</module>
     <module>vertk-kodein-mail</module>
   </modules>

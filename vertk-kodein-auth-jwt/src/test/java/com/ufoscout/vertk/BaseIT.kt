@@ -6,7 +6,7 @@ import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.auth.AuthModule
 import com.ufoscout.vertk.kodein.config.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
-import com.ufoscout.vertk.kodein.router.RouterModule
+import com.ufoscout.vertk.kodein.web.RouterModule
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll

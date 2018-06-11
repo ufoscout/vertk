@@ -1,4 +1,4 @@
-package com.ufoscout.vertk.kodein.router
+package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.config.RouterConfig
