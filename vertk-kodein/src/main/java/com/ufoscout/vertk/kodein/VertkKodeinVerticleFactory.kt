@@ -5,7 +5,7 @@ import io.vertx.core.spi.VerticleFactory
 import org.kodein.di.Kodein
 import org.kodein.di.jxinject.jx
 
-class VertxkKodeinVerticleFactory(val kodein: Kodein) : VerticleFactory {
+class VertkKodeinVerticleFactory(val kodein: Kodein) : VerticleFactory {
 
     companion object {
         val PREFIX = "vertk-kodein"

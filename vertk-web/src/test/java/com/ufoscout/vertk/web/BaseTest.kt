@@ -1,9 +1,11 @@
-package com.ufoscout.vertk
+package com.ufoscout.vertk.web
 
+import com.ufoscout.vertk.Vertk
+import io.vertx.core.Handler
+import io.vertx.core.http.HttpServerRequest
 import io.vertx.core.logging.LoggerFactory
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.TestInfo
+import kotlinx.coroutines.experimental.runBlocking
+import org.junit.jupiter.api.*
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.util.*
@@ -16,7 +18,24 @@ abstract class BaseTest {
     companion object {
 
         protected val TIME_FORMAT = DecimalFormat("####,###.###", DecimalFormatSymbols(Locale.US))
-        val vertk = Vertk.vertk()
+        private val TEMP_DIR = "./target/junit-temp/" + System.currentTimeMillis()
+
+        var vertk = Vertk.vertk()
+        var router = Router.router(vertk)
+        var port = 0
+
+        @BeforeAll @JvmStatic
+        fun baseSetUp() = runBlocking<Unit> {
+            vertk = Vertk.vertk()
+            router = Router.router(vertk)
+            port = vertk.createHttpServer().requestHandler(Handler <HttpServerRequest> { router.accept(it) }).listen(0).actualPort()
+            println("Http Port " + port)
+        }
+
+        @AfterAll @JvmStatic
+        fun baseTearDown() = runBlocking<Unit> {
+            vertk.close()
+        }
 
     }
 

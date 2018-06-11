@@ -9,26 +9,26 @@ import kotlin.reflect.KClass
 
 internal object HttpClientHelper {
 
-    fun <T: Any> handlerRestResponse(response: HttpClientResponse, responseClass: KClass<T>, handler: Handler<HttpClientKResponse<T>>) {
+    fun <T: Any> handlerRestResponse(response: HttpClientResponse, responseClass: KClass<T>, handler: Handler<com.ufoscout.vertk.HttpClientResponse<T>>) {
         response.bodyHandler({ body ->
             try {
-                handler.handle(HttpClientKResponse(response.statusCode(), body.toJsonObject().mapTo(responseClass.javaObjectType), null))
+                handler.handle(HttpClientResponse(response.statusCode(), body.toJsonObject().mapTo(responseClass.javaObjectType), null))
             } catch (e: Throwable) {
-                handler.handle(HttpClientKResponse(response.statusCode(), null, e))
+                handler.handle(HttpClientResponse(response.statusCode(), null, e))
             }
         })
     }
 
-    fun <T : Any> restRequest(request: HttpClientRequest, handler: Handler<HttpClientKResponse<T>>, vararg headers: Pair<String, String>) {
+    fun <T : Any> restRequest(request: HttpClientRequest, handler: Handler<com.ufoscout.vertk.HttpClientResponse<T>>, vararg headers: Pair<String, String>) {
         try {
             headers.forEach { request.putHeader(it.first, it.second) }
             request.end()
         } catch (e: Throwable) {
-            handler.handle(HttpClientKResponse(0, null, e))
+            handler.handle(HttpClientResponse(0, null, e))
         }
     }
 
-    fun <T : Any> restRequestWithBody(request: HttpClientRequest, body: Any, handler: Handler<HttpClientKResponse<T>>, vararg headers: Pair<String, String>) {
+    fun <T : Any> restRequestWithBody(request: HttpClientRequest, body: Any, handler: Handler<com.ufoscout.vertk.HttpClientResponse<T>>, vararg headers: Pair<String, String>) {
         try {
             request.putHeader("content-type", "application/json")
             headers.forEach { request.putHeader(it.first, it.second) }
@@ -36,7 +36,7 @@ internal object HttpClientHelper {
             request.write(JsonObject.mapFrom(body).encode())
             request.end()
         } catch (e: Throwable) {
-            handler.handle(HttpClientKResponse(0, null, e))
+            handler.handle(HttpClientResponse(0, null, e))
         }
     }
 

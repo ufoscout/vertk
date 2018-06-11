@@ -8,8 +8,8 @@ import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.coreutils.jwt.JwtServiceJJWT
 import com.ufoscout.coreutils.jwt.kotlin.CoreJsonProvider
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
-import com.ufoscout.vertk.kodein.VertxKModule
-import io.vertx.core.Vertx
+import com.ufoscout.vertk.Vertk
+import com.ufoscout.vertk.kodein.VertkKodeinModule
 import io.vertx.core.shareddata.Shareable
 import org.kodein.di.Kodein
 import org.kodein.di.direct
@@ -17,7 +17,7 @@ import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
 import org.kodein.di.generic.singleton
 
-class AuthModule(val jwtConfig: JwtConfig): VertxKModule {
+class AuthModule(val jwtConfig: JwtConfig): VertkKodeinModule {
 
     override fun module() = Kodein.Module {
         bind<AuthConfig>() with singleton { AuthConfig(instance()) }
@@ -32,7 +32,7 @@ class AuthModule(val jwtConfig: JwtConfig): VertxKModule {
         }
     }
 
-    override suspend fun onInit(vertk: Vertx, kodein: Kodein) {
+    override suspend fun onInit(vertk: Vertk, kodein: Kodein) {
         vertk.sharedData().getLocalMap<String, AuthShareableData>(AuthContants.LOCAL_DATA_AUTH_SERVICE_MAP)
                 .put(AuthContants.LOCAL_DATA_AUTH_SERVICE_KEY, AuthShareableData(kodein.direct.instance<AuthContextService>()))
     }

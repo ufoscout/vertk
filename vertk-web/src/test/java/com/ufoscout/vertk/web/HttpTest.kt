@@ -1,8 +1,8 @@
-package com.ufoscout.vertk
+package com.ufoscout.vertk.web
 
-import com.ufoscout.vertk.verticle.HttpVerticle
-import com.ufoscout.vertk.verticle.RequestDTO
-import com.ufoscout.vertk.verticle.ResponseDTO
+import com.ufoscout.vertk.web.verticle.HttpVerticle
+import com.ufoscout.vertk.web.verticle.RequestDTO
+import com.ufoscout.vertk.web.verticle.ResponseDTO
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull

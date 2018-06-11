@@ -1,5 +1,6 @@
 package com.ufoscout.vertk.kodein
 
+import com.ufoscout.vertk.BaseTest
 import com.ufoscout.vertk.kodein.stub.SimpleVerticle
 import com.ufoscout.vertk.kodein.stub.VerticleWithDependencies
 import org.junit.jupiter.api.Assertions.*
@@ -10,13 +11,13 @@ import org.kodein.di.generic.singleton
 import org.kodein.di.jxinject.jxInjectorModule
 import java.util.*
 
-class VertxkKodeinVerticleFactoryTest {
+class VertxkKodeinVerticleFactoryTest: BaseTest() {
 
     @Test
     fun shouldReturnTheExpectedPrefix() {
         val kodein = Kodein {}
-        val factory = VertxkKodeinVerticleFactory(kodein)
-        assertEquals(VertxkKodeinVerticleFactory.PREFIX, factory.prefix())
+        val factory = VertkKodeinVerticleFactory(kodein)
+        assertEquals(VertkKodeinVerticleFactory.PREFIX, factory.prefix())
     }
 
     @Test
@@ -25,7 +26,7 @@ class VertxkKodeinVerticleFactoryTest {
             import(jxInjectorModule)
         }
 
-        val factory = VertxkKodeinVerticleFactory(kodein)
+        val factory = VertkKodeinVerticleFactory(kodein)
 
         val instance = factory.createVerticle(SimpleVerticle::class.java!!.getName(), this.javaClass.classLoader)
         assertNotNull(instance)
@@ -40,7 +41,7 @@ class VertxkKodeinVerticleFactoryTest {
             bind<String>() with singleton { name }
         }
 
-        val factory = VertxkKodeinVerticleFactory(kodein)
+        val factory = VertkKodeinVerticleFactory(kodein)
 
         val instance = factory.createVerticle(VerticleWithDependencies::class.java!!.getName(), this.javaClass.classLoader)
         assertNotNull(instance)

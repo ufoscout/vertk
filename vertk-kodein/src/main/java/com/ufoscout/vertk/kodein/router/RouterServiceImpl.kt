@@ -1,21 +1,17 @@
 package com.ufoscout.vertk.kodein.router
 
+import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.config.RouterConfig
-import com.ufoscout.vertk.kodein.router.ErrorDetails
-import com.ufoscout.vertk.kodein.router.WebException
-import com.ufoscout.vertk.kodein.router.WebExceptionService
+import com.ufoscout.vertk.web.Router
 import io.vertx.core.Handler
-import io.vertx.core.Vertx
-import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerRequest
 import io.vertx.core.http.HttpServerResponse
+import io.vertx.core.json.Json
 import io.vertx.core.logging.LoggerFactory
-import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
-import io.vertx.kotlin.coroutines.awaitResult
 import java.util.*
 
-class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertx, val webExceptionService: WebExceptionService) : RouterService {
+class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertk, val webExceptionService: WebExceptionService) : RouterService {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -27,15 +23,14 @@ class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertx, val we
 
     override fun router(): Router {
         val router = Router.router(vertk)
-        return mainRouter.mountSubRouter(routerConfig.subRouterMountPoint, router)
+        mainRouter.router().mountSubRouter(routerConfig.subRouterMountPoint, router.router())
+        return router
     }
 
     override suspend fun start() {
-        awaitResult<HttpServer> { wait ->
-            val port = routerConfig.port;
-            vertk.createHttpServer().requestHandler(Handler<HttpServerRequest> { mainRouter.accept(it) }).listen(port, wait)
-            logger.info("Router created and listening on port ${port}")
-        }
+        val port = routerConfig.port;
+        vertk.createHttpServer().requestHandler(Handler<HttpServerRequest> { mainRouter.accept(it) }).listen(port)
+        logger.info("Router created and listening on port ${port}")
     }
 
     private fun handleFailure(context: RoutingContext) {
@@ -57,7 +52,7 @@ class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertx, val we
                 val uuid = UUID.randomUUID().toString()
                 val message = "Error code: " + uuid
                 logger.error(uuid + " : " + exception.message, exception)
-                response.setStatusCode(statusCode).endWithJson(ErrorDetails(statusCode, message))
+                endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message))
             }
         }
 
@@ -65,7 +60,10 @@ class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertx, val we
 
     private fun reply(response: HttpServerResponse, exception: WebException) {
         val statusCode = exception.statusCode()
-        response.setStatusCode(statusCode).endWithJson(ErrorDetails(statusCode, exception.message!!))
+        endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, exception.message!!))
     }
 
+    private fun endWithJson(response: HttpServerResponse, obj: Any) {
+        response.putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(obj))
+    }
 }

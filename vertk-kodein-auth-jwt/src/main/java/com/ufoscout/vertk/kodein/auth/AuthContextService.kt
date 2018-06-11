@@ -2,11 +2,11 @@ package com.ufoscout.vertk.kodein.auth
 
 import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.auth.AuthContext
-import com.ufoscout.vertk.kodein.VertxKComponent
+import com.ufoscout.vertk.kodein.VertkKodeinStartable
 import io.vertx.core.http.HttpServerRequest
 import io.vertx.ext.web.RoutingContext
 
-interface AuthContextService: VertxKComponent {
+interface AuthContextService: VertkKodeinStartable {
 
     fun get(routingContext: RoutingContext): AuthContext<Long> {
         return get(routingContext.request())

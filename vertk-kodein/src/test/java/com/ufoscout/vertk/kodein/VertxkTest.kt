@@ -23,7 +23,7 @@ class VertxkTest: BaseTest() {
     @Test
     fun shouldDeploy() = runBlocking<Unit> {
 
-        VertxK.start(vertk = vertk, modules = StubModule())
+        VertkKodein.start(vertk = vertk, modules = StubModule())
         assertTrue(VertxKComponentImpl.STARTED)
         assertEquals(StubModule.RANDOM_NAME, VertxKComponentImpl.NAME)
         assertEquals(1, VertxKComponentImpl.COUNT.get())
@@ -41,7 +41,7 @@ class VertxkTest: BaseTest() {
         val deploymentOptions = DeploymentOptions().setInstances(instances)
 
 
-        VertxK.start(vertk = vertk, modules = StubModule(deploymentOptions = deploymentOptions))
+        VertkKodein.start(vertk = vertk, modules = StubModule(deploymentOptions = deploymentOptions))
         assertTrue(VertxKComponentImpl.STARTED)
         assertEquals(StubModule.RANDOM_NAME, VertxKComponentImpl.NAME)
         assertEquals(1, VertxKComponentImpl.COUNT.get())

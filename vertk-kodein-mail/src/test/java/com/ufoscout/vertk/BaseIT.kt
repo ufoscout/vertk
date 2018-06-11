@@ -1,11 +1,9 @@
 package com.ufoscout.vertk
 
-import com.ufoscout.vertk.kodein.VertxK
+import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.mail.MailClientFactory
 import com.ufoscout.vertk.kodein.mail.MailConfig
 import com.ufoscout.vertk.kodein.mail.MailModule
-import io.vertx.core.Vertx
-import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -13,11 +11,11 @@ import org.kodein.di.DKodein
 import org.kodein.di.direct
 import org.testcontainers.containers.GenericContainer
 
-abstract class BaseIT : BaseTest(), K {
+abstract class BaseIT : BaseTest() {
 
     companion object {
 
-        private var vertk: Vertx? = null
+        private var vertk: Vertk? = null
         private var kodein: DKodein? = null
         private var mailConfig: MailConfig? = null
 
@@ -35,9 +33,9 @@ abstract class BaseIT : BaseTest(), K {
                             .setPort(mh!!.getMappedPort(1025))
             )
 
-            vertk = Vertx.vertx()
+            vertk = Vertk.vertk()
 
-            kodein = VertxK.start(
+            kodein = VertkKodein.start(
                     vertk!!,
                     MailModule(mailConfig!!)
             ).direct
@@ -46,12 +44,12 @@ abstract class BaseIT : BaseTest(), K {
 
         @AfterAll @JvmStatic
         fun tearDownClass() = runBlocking<Unit> {
-            awaitResult<Void> { vertk!!.close(it) }
+            vertk!!.close()
         }
 
     }
 
-    protected fun vertk(): Vertx = vertk!!
+    protected fun vertk(): Vertk = vertk!!
     protected fun mailConfig() = mailConfig!!
     protected fun kodein(): DKodein = kodein!!
 

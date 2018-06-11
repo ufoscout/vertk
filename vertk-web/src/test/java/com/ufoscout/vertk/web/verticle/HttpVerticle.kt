@@ -1,11 +1,10 @@
-package com.ufoscout.vertk.verticle
+package com.ufoscout.vertk.web.verticle
 
-import com.ufoscout.vertk.BaseTest
-import com.ufoscout.vertk.K
+import com.ufoscout.vertk.web.BaseTest
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import java.util.*
 
-class HttpVerticle: CoroutineVerticle(), K {
+class HttpVerticle: CoroutineVerticle() {
 
     companion object {
         val path = "/" + UUID.randomUUID().toString()
@@ -28,15 +27,15 @@ class HttpVerticle: CoroutineVerticle(), K {
             ResponseDTO(it.request().method().toString())
         }
 
-        router.restPatch(path, RequestDTO::class) { rc, body ->
+        router.restPatch<RequestDTO>(path) { rc, body ->
             ResponseDTO("${rc.request().method()}-${body.message}")
         }
 
-        router.restPost(path, RequestDTO::class) { rc, body ->
+        router.restPost<RequestDTO>(path) { rc, body ->
             ResponseDTO("${rc.request().method()}-${body.message}")
         }
 
-        router.restPut(path, RequestDTO::class) { rc, body ->
+        router.restPut<RequestDTO>(path) { rc, body ->
             ResponseDTO("${rc.request().method()}-${body.message}")
         }
     }

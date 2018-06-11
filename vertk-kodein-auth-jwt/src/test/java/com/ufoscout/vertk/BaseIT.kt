@@ -2,13 +2,11 @@ package com.ufoscout.vertk
 
 import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.vertk.kodein.AuthTestModule
-import com.ufoscout.vertk.kodein.VertxK
+import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.auth.AuthModule
 import com.ufoscout.vertk.kodein.config.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.kodein.router.RouterModule
-import io.vertx.core.Vertx
-import io.vertx.kotlin.coroutines.awaitResult
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -17,11 +15,11 @@ import org.kodein.di.direct
 import java.io.IOException
 import java.net.ServerSocket
 
-abstract class BaseIT : BaseTest(), K {
+abstract class BaseIT : BaseTest() {
 
     companion object {
 
-        private var vertk: Vertx? = null
+        private var vertk: Vertk? = null
         private val port: Int = getFreePort()
         private var kodein: DKodein? = null
 
@@ -29,9 +27,9 @@ abstract class BaseIT : BaseTest(), K {
         fun setUpClass() = runBlocking<Unit> {
 
             System.setProperty("server.port", port.toString())
-            vertk = Vertx.vertx()
+            vertk = Vertk.vertk()
 
-            kodein = VertxK.start(
+            kodein = VertkKodein.start(
                     vertk!!,
                     AuthModule(JwtConfig("secret", "HS512", 60)),
                     JsonModule(),
@@ -43,7 +41,7 @@ abstract class BaseIT : BaseTest(), K {
 
         @AfterAll @JvmStatic
         fun tearDownClass() = runBlocking<Unit> {
-            awaitResult<Void> { vertk!!.close(it) }
+            vertk!!.close()
         }
 
         @Synchronized private fun getFreePort(): Int {
@@ -62,7 +60,7 @@ abstract class BaseIT : BaseTest(), K {
 
     protected fun port(): Int = port
 
-    protected fun vertk(): Vertx = vertk!!
+    protected fun vertk(): Vertk = vertk!!
 
     protected fun kodein(): DKodein = kodein!!
 

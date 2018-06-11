@@ -1,10 +1,9 @@
 package com.ufoscout.vertk.kodein.router
 
-import com.ufoscout.vertk.BaseTest
-import com.ufoscout.vertk.K
-import com.ufoscout.vertk.kodein.VertxK
+import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.config.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
+import com.ufoscout.vertk.BaseTest
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -21,13 +20,13 @@ import java.util.*
 import java.util.concurrent.CountDownLatch
 import java.util.stream.Collectors
 
-class RouterModuleTest: BaseTest(), K {
+class RouterModuleTest: BaseTest() {
 
     val port = getFreePort()
 
     @BeforeEach
     fun setup() = runBlocking {
-        val kodein = VertxK.start(vertk,
+        val kodein = VertkKodein.start(vertk,
                 JsonModule(),
                 RouterModule(RouterConfig(port)),
                 RouterTestModule()

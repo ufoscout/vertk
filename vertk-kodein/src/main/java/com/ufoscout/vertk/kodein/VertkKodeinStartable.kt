@@ -1,8 +1,6 @@
 package com.ufoscout.vertk.kodein
 
-import com.ufoscout.vertk.K
-
-interface VertxKComponent: K {
+interface VertkKodeinStartable {
 
     suspend fun start()
 

@@ -1,15 +1,15 @@
 package com.ufoscout.vertk.kodein.router
 
-import com.ufoscout.vertk.kodein.VertxKVerticle
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 
-class TestWebController(val routerService: RouterService, val webExceptionService: WebExceptionService): VertxKVerticle() {
+class TestWebController(val routerService: RouterService, val webExceptionService: WebExceptionService): CoroutineVerticle() {
 
     override suspend fun start() {
         println("Start TestWebController")
 
         webExceptionService.registerTransformer<CustomTestException>({exp -> WebException(code = 12345, message = "CustomTestExceptionMessage") })
 
-        val router = routerService.router()
+        val router = routerService.router().router()
 
         router.get("/core/test/fatal/:message").handler {
             var message = it.request().getParam("message")
