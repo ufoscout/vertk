@@ -20,7 +20,7 @@ import org.kodein.di.generic.singleton
 class AuthModule(val jwtConfig: JwtConfig): VertkKodeinModule {
 
     override fun module() = Kodein.Module {
-        bind<AuthConfig>() with singleton { AuthConfig(instance()) }
+        bind<AuthSetup>() with singleton { AuthSetup(instance()) }
         bind<AuthService<Long>>() with singleton {
             AuthServiceImpl<Long>(instance<RolesProvider>(), RolesEncoderToLong())
         }

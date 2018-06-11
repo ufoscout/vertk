@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ufoscout.vertk.kodein.config
+package com.ufoscout.vertk.kodein.web
 
 data class RouterConfig(val port: Int, val subRouterMountPoint: String = "/") {
 

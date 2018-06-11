@@ -1,7 +1,6 @@
 package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.kodein.VertkKodein
-import com.ufoscout.vertk.kodein.config.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.BaseTest
 import kotlinx.coroutines.experimental.runBlocking
@@ -48,6 +47,20 @@ class RouterModuleTest: BaseTest() {
 
         assertTrue(errorDetails.message.contains("Error code:"))
         assertFalse(errorDetails.message.contains(message))
+    }
+
+    @Test
+    fun badRequestExceptionShouldThrow400() = runBlocking<Unit> {
+
+        val message = UUID.randomUUID().toString()
+
+        val response = vertk.createHttpClient().restGet(port, "localhost", "/core/test/badRequestException/${message}", ErrorDetails::class)
+        assertEquals(400, response.statusCode)
+
+        val errorDetails = response.body!!
+        assertEquals(response.statusCode, errorDetails.code)
+
+        assertEquals(message, errorDetails.message)
     }
 
     @Test

@@ -10,4 +10,4 @@ interface WebExceptionService {
 
 }
 
-inline fun <reified T : Throwable> WebExceptionService.registerTransformer(noinline map: (exc: T?) -> WebException) = registerTransformer(T::class, map)
+inline fun <reified T : Throwable> WebExceptionService.registerTransformer(noinline map: (exc: T) -> WebException) = registerTransformer(T::class, map)

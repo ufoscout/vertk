@@ -8,7 +8,7 @@ import com.ufoscout.vertk.kodein.web.WebException
 import com.ufoscout.vertk.kodein.web.WebExceptionService
 import com.ufoscout.vertk.kodein.web.registerTransformer
 
-class AuthConfig(val webExceptionService: WebExceptionService): VertkKodeinStartable {
+class AuthSetup(val webExceptionService: WebExceptionService): VertkKodeinStartable {
 
     override suspend fun start() {
         webExceptionService.registerTransformer<UnauthenticatedException>({ ex -> WebException(code = 401, message = "NotAuthenticated") })

@@ -4,7 +4,7 @@ import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.vertk.kodein.AuthTestModule
 import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.auth.AuthModule
-import com.ufoscout.vertk.kodein.config.RouterConfig
+import com.ufoscout.vertk.kodein.web.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.kodein.web.RouterModule
 import kotlinx.coroutines.experimental.runBlocking

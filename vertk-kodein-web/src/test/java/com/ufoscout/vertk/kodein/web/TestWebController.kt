@@ -20,6 +20,11 @@ class TestWebController(val routerService: RouterService, val webExceptionServic
             throw CustomTestException()
         }
 
+        router.get("/core/test/badRequestException/:message").handler {
+            var message = it.request().getParam("message")
+            throw BadRequestException(message)
+        }
+
         router.get("/core/test/webException/:code/:message").handler {
             var code = it.request().getParam("code")
             var message = it.request().getParam("message")

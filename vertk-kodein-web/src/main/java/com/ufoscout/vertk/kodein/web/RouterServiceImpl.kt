@@ -1,7 +1,6 @@
 package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.Vertk
-import com.ufoscout.vertk.kodein.config.RouterConfig
 import com.ufoscout.vertk.web.Router
 import io.vertx.core.Handler
 import io.vertx.core.http.HttpServerRequest
