@@ -1,6 +1,6 @@
-# vertxk
+# vertk
 
-Vertxk is a set of tools to simplify [Vertx](http://vertx.io/) application development in [Kotlin Programming Language](https://kotlinlang.org/) 
+Vertxk is a set of tools to simplify [Vertx](http://vertk.io/) application development in [Kotlin Programming Language](https://kotlinlang.org/) 
 
 ## VertxK: Dependency injection with [Kodein](https://github.com/SalomonBrys/Kodein)
 [Kodein](https://github.com/SalomonBrys/Kodein) is a simple, easy to use and easy to configure dependency retrieval container.
@@ -20,13 +20,13 @@ Some Features
 Getting Started
 ---------------
 
-1. To get started, add vertxk-kodein dependency to your project:
+1. To get started, add vertk-kodein dependency to your project:
  
 ```xml
         <dependency>
-            <groupId>com.ufoscout.vertxk</groupId>
-            <artifactId>vertxk-kodein</artifactId>
-            <version>${vertxk.version}</version>
+            <groupId>com.ufoscout.vertk</groupId>
+            <artifactId>vertk-kodein</artifactId>
+            <version>${vertk.version}</version>
         </dependency>
 ```
 
@@ -35,29 +35,29 @@ Getting Started
 ```Kotlin
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.jxinject.jxInjectorModule
-import com.ufoscout.vertxk.VertxkKodein
+import com.ufoscout.vertk.VertxkKodein
 ...
 
-        // setup vertx
-        val vertx = Vertx.vertx()
+        // setup vertk
+        val vertk = Vertx.vertx()
 
         val kodein = Kodein {
             import(jxInjectorModule)
-            import(VertxkKodein.module(vertx))
+            import(VertxkKodein.module(vertk))
             import(// IMPORT YOUR MODULES)
         }
 
-        VertxkKodein.registerFactory(vertx, kodein)
+        VertxkKodein.registerFactory(vertk, kodein)
 
         awaitResult<String> {
-            VertxkKodein.deployVerticle<MainVerticle>(vertx, it)
+            VertxkKodein.deployVerticle<MainVerticle>(vertk, it)
         }
 ```
 
-3. Register vertxk Factory in Vertx:
+3. Register vertk Factory in Vertx:
 
 ```Kotlin
-        VertxkKodein.registerFactory(vertx, kodein)
+        VertxkKodein.registerFactory(vertk, kodein)
 ```
 
 4. Everything's ready now! You can now inject whatever bean in your Verticles:
@@ -65,7 +65,7 @@ import com.ufoscout.vertxk.VertxkKodein
 ```Kotlin
 // In this example I use a Coroutine based Verticle. 
 // It works with standard verticles too.
-// WARN: To use the coroutines you need to import the vertx-lang-kotlin-coroutines dependency
+// WARN: To use the coroutines you need to import the vertk-lang-kotlin-coroutines dependency
 class MyVerticle (val myServiceOne: MyServiceOne, val myServiceTwo: MyServiceTwo) : CoroutineVerticle() {
 
     override suspend fun start() {
@@ -79,7 +79,7 @@ class MyVerticle (val myServiceOne: MyServiceOne, val myServiceTwo: MyServiceTwo
 ```Kotlin
     // With coroutines. it works even with default async deploy.   
     awaitResult<String> {
-        VertxkKodein.deployVerticle<MyVerticle>(vertx, it)
+        VertxkKodein.deployVerticle<MyVerticle>(vertk, it)
     }
 ```
 
@@ -102,22 +102,22 @@ class MyVerticle (val myServiceOne: MyServiceOne, val myServiceTwo: MyServiceTwo
 Instantiate Vertx and Kodein:
 
 ```Kotlin
-        val vertx = Vertx.vertx()
+        val vertk = Vertx.vertx()
 
         val kodein = Kodein {
             import(jxInjectorModule)
-            import(VertxkKodein.module(vertx))
+            import(VertxkKodein.module(vertk))
             import(// IMPORT YOUR MODULES)
         }
 
-        VertxkKodein.registerFactory(vertx, kodein)
+        VertxkKodein.registerFactory(vertk, kodein)
 
         awaitResult<String> {
-            VertxkKodein.deployVerticle<MyVerticle>(vertx, it)
+            VertxkKodein.deployVerticle<MyVerticle>(vertk, it)
         }
 ```
 
 Cheers.
 
-A complete working exmple can be found at [https://github.com/ufoscout/kotlin-vertx3](https://github.com/ufoscout/kotlin-vertx3)
+A complete working exmple can be found at [https://github.com/ufoscout/kotlin-vertk3](https://github.com/ufoscout/kotlin-vertk3)
 

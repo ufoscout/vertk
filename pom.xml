@@ -2,14 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <!-- POM file generated with GWT webAppCreator -->
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ufoscout.vertxk</groupId>
-  <artifactId>vertxk</artifactId>
+  <groupId>com.ufoscout.vertk</groupId>
+  <artifactId>vertk-parent</artifactId>
   <version>1.6.6-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>vertxk</name>
-  <description>https://github.com/ufoscout/vertxk</description>
-  <url>https://github.com/ufoscout/vertxk</url>
+  <name>vertk</name>
+  <description>https://github.com/ufoscout/vertk</description>
+  <url>https://github.com/ufoscout/vertk</url>
 
   <licenses>
     <license>
@@ -28,17 +28,17 @@
   </developers>
 
   <modules>
-    <module>vertxk-core</module>
-    <module>vertxk-kodein</module>
-    <module>vertxk-kodein-auth-jwt</module>
-    <module>vertxk-kodein-mail</module>
+    <module>vertk-core</module>
+    <module>vertk-kodein</module>
+    <module>vertk-kodein-auth-jwt</module>
+    <module>vertk-kodein-mail</module>
   </modules>
 
   <scm>
-    <connection>scm:git:ssh://github.com/ufoscout/vertxk.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/ufoscout/vertxk.git</developerConnection>
+    <connection>scm:git:ssh://github.com/ufoscout/vertk.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/ufoscout/vertk.git</developerConnection>
     <tag>HEAD</tag>
-    <url>http://github.com/ufoscout/vertxk</url>
+    <url>http://github.com/ufoscout/vertk</url>
   </scm>
 
   <distributionManagement>
