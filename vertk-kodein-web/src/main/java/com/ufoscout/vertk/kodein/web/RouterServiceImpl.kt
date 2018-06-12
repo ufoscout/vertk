@@ -51,7 +51,7 @@ class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertk, val we
                 val uuid = UUID.randomUUID().toString()
                 val message = "Error code: " + uuid
                 logger.error(uuid + " : " + exception.message, exception)
-                endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message))
+                endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message, WebException.DEFAULT_DETAILS))
             }
         }
 
@@ -59,7 +59,14 @@ class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertk, val we
 
     private fun reply(response: HttpServerResponse, exception: WebException) {
         val statusCode = exception.statusCode()
-        endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, exception.message!!))
+        endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message(exception), exception.details()))
+    }
+
+    private fun message(exception: WebException): String {
+        if (exception.message!=null) {
+            return exception.message
+        }
+        return ""
     }
 
     private fun endWithJson(response: HttpServerResponse, obj: Any) {

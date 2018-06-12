@@ -16,8 +16,8 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout</groupId>
-      <artifactId>coreutils-json-kotlin</artifactId>
+      <groupId>com.ufoscout.coreutils</groupId>
+      <artifactId>json-kotlin</artifactId>
     </dependency>
     <dependency>
       <groupId>org.kodein.di</groupId>

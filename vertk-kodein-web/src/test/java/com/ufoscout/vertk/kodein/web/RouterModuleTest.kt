@@ -93,6 +93,24 @@ class RouterModuleTest: BaseTest() {
         assertEquals("CustomTestExceptionMessage", errorDetails.message)
     }
 
+    @Test
+    fun shouldThrow422andTheValidationDetails() = runBlocking<Unit> {
+
+        val bean = BeanToValidate(null, null)
+
+        val response = vertk.createHttpClient().restPost(port, "localhost", "/core/test/validationException", bean, ErrorDetails::class)
+        assertEquals(422, response.statusCode)
+
+        val errorDetails = response.body!!
+        assertEquals(response.statusCode, errorDetails.code)
+
+        //assertEquals("Input validation failed", errorDetails.message)
+        assertFalse(errorDetails.details.isEmpty())
+        assertEquals(2, errorDetails.details.size)
+        assertEquals("id should not be null", errorDetails.details["id"]!![0])
+        assertEquals("name should not be null", errorDetails.details["name"]!![0])
+    }
+
 
     @Test
     fun shouldUseMultipleThreads() = runBlocking<Unit> {

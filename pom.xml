@@ -59,7 +59,7 @@
   <properties>
     <java.version>1.8</java.version>
 
-    <coreutils.version>1.2.0</coreutils.version>
+    <coreutils.version>1.3.2</coreutils.version>
     <jackson.version>2.9.5</jackson.version>
     <junit.version>5.1.1</junit.version>
     <kodein.version>5.0.0</kodein.version>
@@ -92,18 +92,23 @@
         <scope>import</scope>
       </dependency>
       <dependency>
-        <groupId>com.ufoscout</groupId>
-        <artifactId>coreutils-json-kotlin</artifactId>
+        <groupId>com.ufoscout.coreutils</groupId>
+        <artifactId>json-kotlin</artifactId>
         <version>${coreutils.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.ufoscout</groupId>
-        <artifactId>coreutils-jwt-kotlin</artifactId>
+        <groupId>com.ufoscout.coreutils</groupId>
+        <artifactId>jwt-kotlin</artifactId>
         <version>${coreutils.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.ufoscout</groupId>
-        <artifactId>coreutils-auth</artifactId>
+        <groupId>com.ufoscout.coreutils</groupId>
+        <artifactId>auth</artifactId>
+        <version>${coreutils.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ufoscout.coreutils</groupId>
+        <artifactId>validation</artifactId>
         <version>${coreutils.version}</version>
       </dependency>
       <dependency>

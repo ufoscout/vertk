@@ -16,12 +16,12 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout</groupId>
-      <artifactId>coreutils-auth</artifactId>
+      <groupId>com.ufoscout.coreutils</groupId>
+      <artifactId>auth</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.ufoscout</groupId>
-      <artifactId>coreutils-jwt-kotlin</artifactId>
+      <groupId>com.ufoscout.coreutils</groupId>
+      <artifactId>jwt-kotlin</artifactId>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
