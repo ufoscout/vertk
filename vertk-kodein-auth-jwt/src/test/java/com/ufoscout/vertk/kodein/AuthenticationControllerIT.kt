@@ -21,7 +21,7 @@ class AuthenticationControllerIT : BaseIT() {
 
     val client = vertk().createHttpClient()
     val jwt: JwtService = kodein().instance()
-    val authService: AuthService<Long> = kodein().instance()
+    val authService: AuthService<Long, User> = kodein().instance()
 
     @Test
     fun shouldCallLogin() = runBlocking<Unit> {
@@ -58,7 +58,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldSuccessfulAccessAuthenticatedApiWithToken() = runBlocking<Unit> {
 
-        val sentUserContext = User(UUID.randomUUID().toString(), authService.encode("ADMIN", "OTHER"))
+        val sentUserContext = User(0, UUID.randomUUID().toString(), authService.encode("ADMIN", "OTHER"))
 
         val token = jwt.generate(sentUserContext)
 
@@ -133,7 +133,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldNotAccessProtectedApiWithoutAdminRole() = runBlocking {
 
-        val sentUserContext = User(UUID.randomUUID().toString(), 0)
+        val sentUserContext = User(0, UUID.randomUUID().toString(), 0)
 
         val token = jwt.generate(sentUserContext)
 
@@ -152,7 +152,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldSuccessfulAccessProtectedApiWithAdminRole() = runBlocking {
 
-        val sentUserContext = User(UUID.randomUUID().toString(), authService.encode("ADMIN"))
+        val sentUserContext = User(0, UUID.randomUUID().toString(), authService.encode("ADMIN"))
 
         val token = jwt.generate(sentUserContext)
 
@@ -171,7 +171,7 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldGetTokenExpiredExceptionIfTokenNotValid() = runBlocking {
 
-        val sentUserContext = User(UUID.randomUUID().toString(), 0)
+        val sentUserContext = User(0, UUID.randomUUID().toString(), 0)
 
         val token = jwt.generate("", sentUserContext, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
 

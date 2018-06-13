@@ -9,8 +9,8 @@ class InMemoryUserService() {
     private val users = ConcurrentHashMap<String, User>()
 
     init {
-        users["user"] = User("user", 2L)
-        users["admin"] = User("admin", 3L)
+        users["user"] = User(0, "user", 2L)
+        users["admin"] = User(1, "admin", 3L)
     }
 
     fun login(username: String, password: String): User {
