@@ -9,11 +9,13 @@ import io.vertx.ext.web.RoutingContext
 
 interface AuthContextService<R, U: Auth<R>>: VertkKodeinStartable {
 
-    fun get(routingContext: RoutingContext): AuthContext<R, U> {
-        return get(routingContext.request())
+    fun from(routingContext: RoutingContext): AuthContext<R, U> {
+        return from(routingContext.request())
     }
 
-    fun get(httpServerRequest: HttpServerRequest): AuthContext<R, U>
+    fun from(httpServerRequest: HttpServerRequest): AuthContext<R, U>
+
+    fun from(auth: U): AuthContext<R, U>
 
     fun generateToken(auth: U): String
 
@@ -24,5 +26,13 @@ interface AuthContextService<R, U: Auth<R>>: VertkKodeinStartable {
      * @return
      */
     fun encode(vararg roleNames: String): R
+
+    /**
+     * Returns the set of [Role]s from the encoded representation.
+     *
+     * @param roleNames
+     * @return
+     */
+    fun decode(encodedRoles: R): List<Role>
 
 }

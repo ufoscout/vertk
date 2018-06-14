@@ -26,17 +26,17 @@ class AuthenticationController (val routerService: RouterService,
         }
 
         router.restGet(BASE_AUTH_API + "/test/public") {
-            val authContext = auth.get(it.request())
+            val authContext = auth.from(it.request())
             authContext.auth
         }
 
         router.restGet(BASE_AUTH_API + "/test/authenticated") {
-            val authContext = auth.get(it).isAuthenticated()
+            val authContext = auth.from(it).isAuthenticated()
             authContext.auth
         }
 
         router.restGet(BASE_AUTH_API + "/test/protected") {
-            val authContext = auth.get(it).hasRole("ADMIN")
+            val authContext = auth.from(it).hasRole("ADMIN")
             authContext.auth
         }
 
