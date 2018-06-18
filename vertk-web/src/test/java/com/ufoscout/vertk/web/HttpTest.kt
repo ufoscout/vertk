@@ -22,7 +22,7 @@ class HttpTest: BaseTest() {
     @Test
     fun shouldCallDelete() = runBlocking<Unit> {
         val response = vertk.createHttpClient()
-                .restDelete(port, "localhost", HttpVerticle.path, ResponseDTO::class)
+                .restDelete<ResponseDTO>(port, "localhost", HttpVerticle.path)
         assertNotNull(response)
         assertNotNull(response.body)
         assertEquals(200, response.statusCode)
@@ -32,7 +32,7 @@ class HttpTest: BaseTest() {
     @Test
     fun shouldCallGet() = runBlocking<Unit> {
         val response = vertk.createHttpClient()
-                .restGet(port, "localhost", HttpVerticle.path, ResponseDTO::class)
+                .restGet<ResponseDTO>(port, "localhost", HttpVerticle.path)
         assertNotNull(response)
         assertNotNull(response.body)
         assertEquals(200, response.statusCode)
@@ -42,7 +42,7 @@ class HttpTest: BaseTest() {
     @Test
     fun shouldCallOptions() = runBlocking<Unit> {
         val response = vertk.createHttpClient()
-                .restOptions(port, "localhost", HttpVerticle.path, ResponseDTO::class)
+                .restOptions<ResponseDTO>(port, "localhost", HttpVerticle.path)
         assertNotNull(response)
         assertNotNull(response.body)
         assertEquals(200, response.statusCode)
@@ -53,7 +53,7 @@ class HttpTest: BaseTest() {
     fun shouldCallPatch() = runBlocking<Unit> {
         val request = RequestDTO(UUID.randomUUID().toString())
         val response = vertk.createHttpClient()
-                .restPatch(port, "localhost", HttpVerticle.path, request, ResponseDTO::class)
+                .restPatch<ResponseDTO>(port, "localhost", HttpVerticle.path, request)
         assertNotNull(response)
         assertNotNull(response.body)
         assertEquals(200, response.statusCode)
@@ -64,7 +64,7 @@ class HttpTest: BaseTest() {
     fun shouldCallPost() = runBlocking<Unit> {
         val request = RequestDTO(UUID.randomUUID().toString())
         val response = vertk.createHttpClient()
-                .restPost(port, "localhost", HttpVerticle.path, request, ResponseDTO::class)
+                .restPost<ResponseDTO>(port, "localhost", HttpVerticle.path, request)
         assertNotNull(response)
         assertNotNull(response.body)
         assertEquals(200, response.statusCode)
@@ -75,7 +75,7 @@ class HttpTest: BaseTest() {
     fun shouldCallPut() = runBlocking<Unit> {
         val request = RequestDTO(UUID.randomUUID().toString())
         val response = vertk.createHttpClient()
-                .restPut(port, "localhost", HttpVerticle.path, request, ResponseDTO::class)
+                .restPut<ResponseDTO>(port, "localhost", HttpVerticle.path, request)
         assertNotNull(response)
         assertNotNull(response.body)
         assertEquals(200, response.statusCode)

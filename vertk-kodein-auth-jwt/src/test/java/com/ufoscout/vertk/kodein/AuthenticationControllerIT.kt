@@ -27,7 +27,7 @@ class AuthenticationControllerIT : BaseIT() {
     fun shouldCallLogin() = runBlocking<Unit> {
 
         val loginDto = LoginDto("user", "user")
-        val response = client.restPost(port(), "localhost", AuthenticationController.BASE_AUTH_API + "/login", loginDto, LoginResponseDto::class)
+        val response = client.restPost<LoginResponseDto>(port(), "localhost", AuthenticationController.BASE_AUTH_API + "/login", loginDto)
 
         assertEquals(200, response.statusCode)
         logger.info("token is ${response.body!!.token}")
@@ -36,9 +36,8 @@ class AuthenticationControllerIT : BaseIT() {
 
     @Test
     fun shouldGetUnauthorizedWithAnonymousUser() = runBlocking<Unit> {
-        val response = client.restGet(port(), "localhost",
-                AuthenticationController.BASE_AUTH_API + "/test/authenticated",
-                ErrorDetails::class)
+        val response = client.restGet<ErrorDetails>(port(), "localhost",
+                AuthenticationController.BASE_AUTH_API + "/test/authenticated")
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
         assertEquals("NotAuthenticated", response.body!!.message)
@@ -47,9 +46,8 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
 
     fun shouldGetUnauthorizedWithAnonymousUserOnProtectedUri() = runBlocking<Unit> {
-        val response = client.restGet(port(), "localhost",
-                AuthenticationController.BASE_AUTH_API + "/test/protected",
-                ErrorDetails::class)
+        val response = client.restGet<ErrorDetails>(port(), "localhost",
+                AuthenticationController.BASE_AUTH_API + "/test/protected")
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
         assertEquals("NotAuthenticated", response.body!!.message)
@@ -64,9 +62,8 @@ class AuthenticationControllerIT : BaseIT() {
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
-        val response = client.restGet(port(), "localhost",
+        val response = client.restGet<User>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/authenticated",
-                User::class,
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
@@ -79,9 +76,8 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldAccessPublicUriWithAnonymousUser() = runBlocking<Unit> {
 
-        val response = client.restGet(port(), "localhost",
-                AuthenticationController.BASE_AUTH_API + "/test/public",
-                User::class)
+        val response = client.restGet<User>(port(), "localhost",
+                AuthenticationController.BASE_AUTH_API + "/test/public")
 
         val userContext = response.body
         assertNotNull(userContext)
@@ -95,12 +91,11 @@ class AuthenticationControllerIT : BaseIT() {
 
         val loginDto = LoginDto("user", "user")
 
-        val response = client.restPost(
+        val response = client.restPost<LoginResponseDto>(
                 port(),
                 "localhost",
                 AuthenticationController.BASE_AUTH_API + "/login",
-                loginDto,
-                LoginResponseDto::class)
+                loginDto)
 
 
         val responseDto = response.body
@@ -118,12 +113,11 @@ class AuthenticationControllerIT : BaseIT() {
 
         val loginDto = LoginDto("user", UUID.randomUUID().toString())
 
-        val response = client.restPost(
+        val response = client.restPost<ErrorDetails>(
                 port(),
                 "localhost",
                 AuthenticationController.BASE_AUTH_API + "/login",
-                loginDto,
-                ErrorDetails::class)
+                loginDto)
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)
         assertEquals("BadCredentials", response.body!!.message)
@@ -139,9 +133,8 @@ class AuthenticationControllerIT : BaseIT() {
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
-        val response = client.restGet(port(), "localhost",
+        val response = client.restGet<ErrorDetails>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/protected",
-                ErrorDetails::class,
                 headers)
 
         assertEquals(HttpResponseStatus.FORBIDDEN.code(), response.statusCode)
@@ -158,9 +151,8 @@ class AuthenticationControllerIT : BaseIT() {
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
-        val response = client.restGet(port(), "localhost",
+        val response = client.restGet<User>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/protected",
-                User::class,
                 headers)
 
         val receivedUserContext = response.body
@@ -177,9 +169,8 @@ class AuthenticationControllerIT : BaseIT() {
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
-        val response = client.restGet(port(), "localhost",
+        val response = client.restGet<ErrorDetails>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/protected",
-                ErrorDetails::class,
                 headers)
 
         assertEquals(HttpResponseStatus.UNAUTHORIZED.code(), response.statusCode)

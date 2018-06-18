@@ -39,7 +39,7 @@ class RouterModuleTest: BaseTest() {
 
         val message = UUID.randomUUID().toString()
 
-        val response = vertk.createHttpClient().restGet(port, "localhost", "/core/test/fatal/${message}", ErrorDetails::class)
+        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/fatal/${message}")
         assertEquals(500, response.statusCode)
 
         val errorDetails = response.body!!
@@ -54,7 +54,7 @@ class RouterModuleTest: BaseTest() {
 
         val message = UUID.randomUUID().toString()
 
-        val response = vertk.createHttpClient().restGet(port, "localhost", "/core/test/badRequestException/${message}", ErrorDetails::class)
+        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/badRequestException/${message}")
         assertEquals(400, response.statusCode)
 
         val errorDetails = response.body!!
@@ -69,7 +69,7 @@ class RouterModuleTest: BaseTest() {
         val message = UUID.randomUUID().toString()
         val statusCode = 400 + Random().nextInt(50)
 
-        val response = vertk.createHttpClient().restGet(port, "localhost", "/core/test/webException/${statusCode}/${message}", ErrorDetails::class)
+        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/webException/${statusCode}/${message}")
 
         assertEquals(statusCode, response.statusCode)
         val errorDetails = response.body!!
@@ -83,7 +83,7 @@ class RouterModuleTest: BaseTest() {
     @Test
     fun shouldMapWebExceptionFromCustomException() = runBlocking<Unit> {
 
-        val response = vertk.createHttpClient().restGet(port, "localhost", "/core/test/customException", ErrorDetails::class)
+        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/customException")
         assertEquals(12345, response.statusCode)
 
         val errorDetails = response.body!!
@@ -98,7 +98,7 @@ class RouterModuleTest: BaseTest() {
 
         val bean = BeanToValidate(null, null)
 
-        val response = vertk.createHttpClient().restPost(port, "localhost", "/core/test/validationException", bean, ErrorDetails::class)
+        val response = vertk.createHttpClient().restPost<ErrorDetails>(port, "localhost", "/core/test/validationException", bean)
         assertEquals(422, response.statusCode)
 
         val errorDetails = response.body!!
