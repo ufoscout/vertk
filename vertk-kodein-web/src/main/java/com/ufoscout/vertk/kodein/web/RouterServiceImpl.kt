@@ -58,6 +58,7 @@ class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertk, val we
     }
 
     private fun reply(response: HttpServerResponse, exception: WebException) {
+        logger.error(exception.message, exception)
         val statusCode = exception.statusCode()
         endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message(exception), exception.details()))
     }
