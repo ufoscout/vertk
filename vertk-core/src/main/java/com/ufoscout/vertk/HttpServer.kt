@@ -15,7 +15,14 @@ class HttpServer(val httpServer: io.vertx.core.http.HttpServer) {
         return this
     }
 
-    suspend fun listen(port: Int, host: String = "127.0.0.1"): HttpServer {
+    suspend fun listen(port: Int): HttpServer {
+        awaitResult<io.vertx.core.http.HttpServer> { wait ->
+            httpServer.listen(port, wait)
+        }
+        return this
+    }
+
+    suspend fun listen(port: Int, host: String): HttpServer {
         awaitResult<io.vertx.core.http.HttpServer> { wait ->
             httpServer.listen(port, host, wait)
         }
