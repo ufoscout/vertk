@@ -14,6 +14,14 @@ open class AuthContextServiceImpl<R, U: Auth<R>>(
         val klass: KClass<U>,
         val producer: () -> U ) : AuthContextService<R, U> {
 
+    override fun tokenFrom(httpServerRequest: HttpServerRequest): String? {
+        val header = httpServerRequest.getHeader(AuthContants.JWT_TOKEN_HEADER);
+        if (header!=null && header.startsWith(AuthContants.JWT_TOKEN_HEADER_SUFFIX)) {
+            return header.substring(AuthContants.JWT_TOKEN_HEADER_SUFFIX.length)
+        }
+        return null
+    }
+
     override suspend fun start() {
         authService.start()
     }
@@ -23,9 +31,9 @@ open class AuthContextServiceImpl<R, U: Auth<R>>(
     }
 
     override fun from(request: HttpServerRequest): AuthContext<R, U> {
-        val header = request.getHeader(AuthContants.JWT_TOKEN_HEADER);
-        if (header!=null && header.startsWith(AuthContants.JWT_TOKEN_HEADER_SUFFIX)) {
-            val user: U = jwtService.parse(header.substring(AuthContants.JWT_TOKEN_HEADER_SUFFIX.length), klass)
+        val token = tokenFrom(request)
+        if (token!=null) {
+            val user: U = jwtService.parse(token, klass)
             return from(user)
         }
         return from(producer.invoke())

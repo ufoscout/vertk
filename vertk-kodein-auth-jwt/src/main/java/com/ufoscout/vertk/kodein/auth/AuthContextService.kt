@@ -9,6 +9,12 @@ import io.vertx.ext.web.RoutingContext
 
 interface AuthContextService<R, U: Auth<R>>: VertkKodeinStartable {
 
+    fun tokenFrom(routingContext: RoutingContext): String? {
+        return tokenFrom(routingContext.request())
+    }
+
+    fun tokenFrom(httpServerRequest: HttpServerRequest): String?
+
     fun from(routingContext: RoutingContext): AuthContext<R, U> {
         return from(routingContext.request())
     }
