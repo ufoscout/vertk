@@ -1,19 +1,19 @@
 package com.ufoscout.vertk.kodein.web
 
+import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.vertk.kodein.auth.BadCredentialsException
-import com.ufoscout.vertk.kodein.auth.User
 import java.util.concurrent.ConcurrentHashMap
 
 class InMemoryUserService() {
 
-    private val users = ConcurrentHashMap<String, User>()
+    private val users = ConcurrentHashMap<String, Auth>()
 
     init {
-        users["user"] = User(0, "user", 2L)
-        users["admin"] = User(1, "admin", 3L)
+        users["user"] = Auth(0, "user", arrayOf("USER"))
+        users["admin"] = Auth(1, "admin", arrayOf("USER", "ADMIN"))
     }
 
-    fun login(username: String, password: String): User {
+    fun login(username: String, password: String): Auth {
         val user = users[username]
 
         if (user == null || !password.equals(username)) {

@@ -1,11 +1,11 @@
 package com.ufoscout.vertk.kodein.web
 
-import com.ufoscout.vertk.kodein.auth.UserAuthService
+import com.ufoscout.vertk.kodein.auth.AuthContextService
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 
 class AuthenticationController (val routerService: RouterService,
-                                val auth: UserAuthService): CoroutineVerticle() {
+                                val auth: AuthContextService): CoroutineVerticle() {
 
     companion object {
         val BASE_AUTH_API = "/auth"

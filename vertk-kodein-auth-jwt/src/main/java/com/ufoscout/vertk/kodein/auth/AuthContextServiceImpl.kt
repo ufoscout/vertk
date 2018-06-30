@@ -3,16 +3,12 @@ package com.ufoscout.vertk.kodein.auth
 import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.auth.AuthContext
 import com.ufoscout.coreutils.auth.AuthService
-import com.ufoscout.coreutils.auth.Role
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import io.vertx.core.http.HttpServerRequest
-import kotlin.reflect.KClass
 
-open class AuthContextServiceImpl<R, U: Auth<R>>(
-        val authService: AuthService<R, U>,
-        val jwtService: JwtService,
-        val klass: KClass<U>,
-        val producer: () -> U ) : AuthContextService<R, U> {
+open class AuthContextServiceImpl(
+        val authService: AuthService,
+        val jwtService: JwtService): AuthContextService {
 
     override fun tokenFrom(httpServerRequest: HttpServerRequest): String? {
         val header = httpServerRequest.getHeader(AuthContants.JWT_TOKEN_HEADER);
@@ -26,29 +22,21 @@ open class AuthContextServiceImpl<R, U: Auth<R>>(
         authService.start()
     }
 
-    override fun from(auth: U): AuthContext<R, U> {
+    override fun from(auth: Auth): AuthContext {
         return authService.auth(auth)
     }
 
-    override fun from(request: HttpServerRequest): AuthContext<R, U> {
+    override fun from(request: HttpServerRequest): AuthContext {
         val token = tokenFrom(request)
         if (token!=null) {
-            val user: U = jwtService.parse(token, klass)
+            val user: Auth = jwtService.parse(token, Auth::class)
             return from(user)
         }
-        return from(producer.invoke())
+        return from(Auth())
     }
 
-    override fun generateToken(auth: U): String {
+    override fun generateToken(auth: Auth): String {
         return jwtService.generate(auth.username, auth)
-    }
-
-    override fun encode(vararg roleNames: String): R {
-        return authService.encode(*roleNames)
-    }
-
-    override fun decode(encodedRoles: R): List<Role> {
-        return authService.decode(encodedRoles)
     }
 
 }

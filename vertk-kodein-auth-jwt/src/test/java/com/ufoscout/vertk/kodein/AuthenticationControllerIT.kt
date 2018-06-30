@@ -1,10 +1,10 @@
 package com.ufoscout.vertk.kodein
 
+import com.ufoscout.coreutils.auth.Auth
 import com.ufoscout.coreutils.auth.AuthService
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
 import com.ufoscout.vertk.BaseIT
 import com.ufoscout.vertk.kodein.auth.AuthContants
-import com.ufoscout.vertk.kodein.auth.User
 import com.ufoscout.vertk.kodein.web.ErrorDetails
 import com.ufoscout.vertk.kodein.web.AuthenticationController
 import com.ufoscout.vertk.kodein.web.LoginDto
@@ -21,7 +21,7 @@ class AuthenticationControllerIT : BaseIT() {
 
     val client = vertk().createHttpClient()
     val jwt: JwtService = kodein().instance()
-    val authService: AuthService<Long, User> = kodein().instance()
+    val authService: AuthService = kodein().instance()
 
     @Test
     fun shouldCallLogin() = runBlocking<Unit> {
@@ -35,7 +35,7 @@ class AuthenticationControllerIT : BaseIT() {
     }
 
     @Test
-    fun shouldGetUnauthorizedWithAnonymousUser() = runBlocking<Unit> {
+    fun shouldGetUnauthorizedWithAnonymousAuth() = runBlocking<Unit> {
         val response = client.restGet<ErrorDetails>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/authenticated")
 
@@ -45,7 +45,7 @@ class AuthenticationControllerIT : BaseIT() {
 
     @Test
 
-    fun shouldGetUnauthorizedWithAnonymousUserOnProtectedUri() = runBlocking<Unit> {
+    fun shouldGetUnauthorizedWithAnonymousAuthOnProtectedUri() = runBlocking<Unit> {
         val response = client.restGet<ErrorDetails>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/protected")
 
@@ -56,32 +56,32 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldSuccessfulAccessAuthenticatedApiWithToken() = runBlocking<Unit> {
 
-        val sentUserContext = User(0, UUID.randomUUID().toString(), authService.encode("ADMIN", "OTHER"))
+        val sentAuthContext = Auth(0, UUID.randomUUID().toString(), arrayOf("ADMIN", "OTHER"))
 
-        val token = jwt.generate(sentUserContext)
+        val token = jwt.generate(sentAuthContext)
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
-        val response = client.restGet<User>(port(), "localhost",
+        val response = client.restGet<Auth>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/authenticated",
                 headers)
 
         assertEquals(HttpResponseStatus.OK.code(), response.statusCode)
 
-        val receivedUserContext = response.body
-        assertNotNull(receivedUserContext)
-        assertEquals(sentUserContext.username, receivedUserContext!!.username)
+        val receivedAuthContext = response.body
+        assertNotNull(receivedAuthContext)
+        assertEquals(sentAuthContext.username, receivedAuthContext!!.username)
     }
 
     @Test
-    fun shouldAccessPublicUriWithAnonymousUser() = runBlocking<Unit> {
+    fun shouldAccessPublicUriWithAnonymousAuth() = runBlocking<Unit> {
 
-        val response = client.restGet<User>(port(), "localhost",
+        val response = client.restGet<Auth>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/public")
 
         val userContext = response.body
         assertNotNull(userContext)
-        assertTrue(authService.decode(userContext!!.roles).size === 0)
+        assertTrue(userContext!!.roles.size === 0)
         assertTrue(userContext!!.username.isEmpty())
     }
 
@@ -101,10 +101,10 @@ class AuthenticationControllerIT : BaseIT() {
         val responseDto = response.body
         assertNotNull(responseDto)
         assertNotNull(responseDto!!.token)
-        val userContext = jwt.parse(responseDto.token, User::class)
+        val userContext = jwt.parse(responseDto.token, Auth::class)
         assertEquals("user", userContext.username)
-        assertEquals(1, authService.decode(userContext.roles).size)
-        assertEquals("USER", authService.decode(userContext.roles)[0].name)
+        assertEquals(1, arrayOf(userContext.roles).size)
+        assertEquals("USER", authService.getByName(*userContext.roles)[0].name)
     }
 
     @Test
@@ -127,9 +127,9 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldNotAccessProtectedApiWithoutAdminRole() = runBlocking {
 
-        val sentUserContext = User(0, UUID.randomUUID().toString(), 0)
+        val sentAuthContext = Auth(0, UUID.randomUUID().toString())
 
-        val token = jwt.generate(sentUserContext)
+        val token = jwt.generate(sentAuthContext)
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
@@ -145,27 +145,27 @@ class AuthenticationControllerIT : BaseIT() {
     @Test
     fun shouldSuccessfulAccessProtectedApiWithAdminRole() = runBlocking {
 
-        val sentUserContext = User(0, UUID.randomUUID().toString(), authService.encode("ADMIN"))
+        val sentAuthContext = Auth(0, UUID.randomUUID().toString(), arrayOf("ADMIN"))
 
-        val token = jwt.generate(sentUserContext)
+        val token = jwt.generate(sentAuthContext)
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
-        val response = client.restGet<User>(port(), "localhost",
+        val response = client.restGet<Auth>(port(), "localhost",
                 AuthenticationController.BASE_AUTH_API + "/test/protected",
                 headers)
 
-        val receivedUserContext = response.body
-        assertNotNull(receivedUserContext)
-        assertEquals(sentUserContext.username, receivedUserContext!!.username)
+        val receivedAuthContext = response.body
+        assertNotNull(receivedAuthContext)
+        assertEquals(sentAuthContext.username, receivedAuthContext!!.username)
     }
 
     @Test
     fun shouldGetTokenExpiredExceptionIfTokenNotValid() = runBlocking {
 
-        val sentUserContext = User(0, UUID.randomUUID().toString(), 0)
+        val sentAuthContext = Auth(0, UUID.randomUUID().toString())
 
-        val token = jwt.generate("", sentUserContext, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
+        val token = jwt.generate("", sentAuthContext, Date(System.currentTimeMillis() - 1000), Date(System.currentTimeMillis() - 1000))
 
         val headers = Pair(AuthContants.JWT_TOKEN_HEADER, "${AuthContants.JWT_TOKEN_HEADER_SUFFIX}$token")
 
