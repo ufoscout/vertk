@@ -1,34 +1,34 @@
 package com.ufoscout.vertk.kodein.web
 
-import com.ufoscout.vertk.Vertk
-import com.ufoscout.vertk.web.Router
+import com.ufoscout.vertk.awaitListen
 import io.vertx.core.Handler
+import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServerRequest
 import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.json.Json
 import io.vertx.core.logging.LoggerFactory
+import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import java.util.*
 
-class RouterServiceImpl(val routerConfig: RouterConfig, val vertk: Vertk, val webExceptionService: WebExceptionService) : RouterService {
+class RouterServiceImpl(val routerConfig: RouterConfig, val vertx: Vertx, val webExceptionService: WebExceptionService) : RouterService {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
 
-    private val mainRouter = Router.router(vertk);
+    private val mainRouter = Router.router(vertx);
 
     init {
         mainRouter.route().failureHandler { handleFailure(it) }
     }
 
     override fun router(): Router {
-        val router = Router.router(vertk)
-        mainRouter.router().mountSubRouter(routerConfig.subRouterMountPoint, router.router())
+        val router = Router.router(vertx)
+        mainRouter.mountSubRouter(routerConfig.subRouterMountPoint, router)
         return router
     }
 
     override suspend fun start() {
-        val port = routerConfig.port;
-        vertk.createHttpServer().requestHandler(Handler<HttpServerRequest> { mainRouter.accept(it) }).listen(port)
+        val port = vertx.createHttpServer().requestHandler(Handler<HttpServerRequest> { mainRouter.accept(it) }).awaitListen(routerConfig.port).actualPort()
         logger.info("Router created and listening on port ${port}")
     }
 

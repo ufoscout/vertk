@@ -1,5 +1,6 @@
 package com.ufoscout.vertk
 
+import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -14,7 +15,7 @@ abstract class BaseTest {
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private var testStartDate: Long = 0
 
-    var vertk = Vertk.vertk()
+    var vertk = Vertx.vertx()
 
     @BeforeEach
     fun setUpBeforeTest(testInfo: TestInfo) {

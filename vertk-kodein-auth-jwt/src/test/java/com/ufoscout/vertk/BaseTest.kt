@@ -1,5 +1,6 @@
 package com.ufoscout.vertk
 
+import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterEach
@@ -15,16 +16,16 @@ abstract class BaseTest {
     protected val logger = LoggerFactory.getLogger(this.javaClass)
     private var testStartDate: Long = 0
 
-    var vertk = Vertk.vertk()
+    var vertk = Vertx.vertx()
 
     @BeforeEach
     fun baseSetUp() = runBlocking<Unit> {
-        vertk = Vertk.vertk()
+        vertk = Vertx.vertx()
     }
 
     @AfterEach
     fun baseTearDown() = runBlocking<Unit> {
-        vertk.close()
+        vertk.awaitClose()
     }
 
     @BeforeEach

@@ -29,6 +29,7 @@
 
   <modules>
     <module>vertk-core</module>
+    <module>vertk-web-client</module>
     <module>vertk-web</module>
     <module>vertk-kodein</module>
     <module>vertk-kodein-web</module>
@@ -65,7 +66,7 @@
     <kodein.version>[5.0.0,5.99.99]</kodein.version>
     <logback.version>1.2.3</logback.version>
     <mockito.version>2.19.0</mockito.version>
-    <testcontainers.version>1.7.3</testcontainers.version>
+    <testcontainers.version>1.8.0</testcontainers.version>
     <vertx.version>3.5.2</vertx.version>
 
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>

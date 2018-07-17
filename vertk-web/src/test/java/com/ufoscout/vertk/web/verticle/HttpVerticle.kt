@@ -1,6 +1,7 @@
 package com.ufoscout.vertk.web.verticle
 
 import com.ufoscout.vertk.web.BaseTest
+import com.ufoscout.vertk.web.*
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import java.util.*
 
@@ -14,28 +15,28 @@ class HttpVerticle: CoroutineVerticle() {
 
         val router = BaseTest.router
 
-        router.restDelete(path) {
+        router.awaitRestDelete(path) {
             ResponseDTO(it.request().method().toString())
         }
 
 
-        router.restGet(path) {
+        router.awaitRestGet(path) {
             ResponseDTO(it.request().method().toString())
         }
 
-        router.restOptions(path) {
+        router.awaitRestOptions(path) {
             ResponseDTO(it.request().method().toString())
         }
 
-        router.restPatch<RequestDTO>(path) { rc, body ->
+        router.awaitRestPatch<RequestDTO>(path) { rc, body ->
             ResponseDTO("${rc.request().method()}-${body.message}")
         }
 
-        router.restPost<RequestDTO>(path) { rc, body ->
+        router.awaitRestPost<RequestDTO>(path) { rc, body ->
             ResponseDTO("${rc.request().method()}-${body.message}")
         }
 
-        router.restPut<RequestDTO>(path) { rc, body ->
+        router.awaitRestPut<RequestDTO>(path) { rc, body ->
             ResponseDTO("${rc.request().method()}-${body.message}")
         }
     }

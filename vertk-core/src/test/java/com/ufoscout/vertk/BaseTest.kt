@@ -1,5 +1,6 @@
 package com.ufoscout.vertk
 
+import io.vertx.core.Vertx
 import io.vertx.core.logging.LoggerFactory
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +17,7 @@ abstract class BaseTest {
     companion object {
 
         protected val TIME_FORMAT = DecimalFormat("####,###.###", DecimalFormatSymbols(Locale.US))
-        val vertk = Vertk.vertk()
+        val vertk = Vertx.vertx()
 
     }
 

@@ -3,6 +3,10 @@ package com.ufoscout.vertk.kodein.web
 import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.BaseTest
+import com.ufoscout.vertk.web.client.awaitSend
+import com.ufoscout.vertk.web.client.awaitSendJson
+import com.ufoscout.vertk.web.client.bodyAsJson
+import io.vertx.ext.web.client.WebClient
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -22,6 +26,7 @@ import java.util.stream.Collectors
 class RouterModuleTest: BaseTest() {
 
     val port = getFreePort()
+    var client = WebClient.create(vertk)
 
     @BeforeEach
     fun setup() = runBlocking {
@@ -39,11 +44,13 @@ class RouterModuleTest: BaseTest() {
 
         val message = UUID.randomUUID().toString()
 
-        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/fatal/${message}")
-        assertEquals(500, response.statusCode)
+        val response = client.get(port, "localhost", "/core/test/fatal/${message}").
+                awaitSend()
 
-        val errorDetails = response.body!!
-        assertEquals(response.statusCode, errorDetails.code)
+        assertEquals(500, response.statusCode())
+
+        val errorDetails = response.bodyAsJson<ErrorDetails>()
+        assertEquals(response.statusCode(), errorDetails.code)
 
         assertTrue(errorDetails.message.contains("Error code:"))
         assertFalse(errorDetails.message.contains(message))
@@ -54,11 +61,12 @@ class RouterModuleTest: BaseTest() {
 
         val message = UUID.randomUUID().toString()
 
-        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/badRequestException/${message}")
-        assertEquals(400, response.statusCode)
+        val response = client.get(port, "localhost", "/core/test/badRequestException/${message}").awaitSend()
 
-        val errorDetails = response.body!!
-        assertEquals(response.statusCode, errorDetails.code)
+        assertEquals(400, response.statusCode())
+
+        val errorDetails = response.bodyAsJson<ErrorDetails>()
+        assertEquals(response.statusCode(), errorDetails.code)
 
         assertEquals(message, errorDetails.message)
     }
@@ -69,12 +77,12 @@ class RouterModuleTest: BaseTest() {
         val message = UUID.randomUUID().toString()
         val statusCode = 400 + Random().nextInt(50)
 
-        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/webException/${statusCode}/${message}")
+        val response = client.get(port, "localhost", "/core/test/webException/${statusCode}/${message}").awaitSend()
 
-        assertEquals(statusCode, response.statusCode)
-        val errorDetails = response.body!!
+        assertEquals(statusCode, response.statusCode())
+        val errorDetails = response.bodyAsJson<ErrorDetails>()
 
-        assertEquals(response.statusCode, errorDetails.code)
+        assertEquals(response.statusCode(), errorDetails.code)
 
         assertFalse(errorDetails.message.isEmpty())
         assertEquals(message, errorDetails.message)
@@ -83,11 +91,11 @@ class RouterModuleTest: BaseTest() {
     @Test
     fun shouldMapWebExceptionFromCustomException() = runBlocking<Unit> {
 
-        val response = vertk.createHttpClient().restGet<ErrorDetails>(port, "localhost", "/core/test/customException")
-        assertEquals(12345, response.statusCode)
+        val response = client.get(port, "localhost", "/core/test/customException").awaitSend()
+        assertEquals(12345, response.statusCode())
 
-        val errorDetails = response.body!!
-        assertEquals(response.statusCode, errorDetails.code)
+        val errorDetails = response.bodyAsJson<ErrorDetails>()
+        assertEquals(response.statusCode(), errorDetails.code)
 
         assertFalse(errorDetails.message.isEmpty())
         assertEquals("CustomTestExceptionMessage", errorDetails.message)
@@ -98,11 +106,11 @@ class RouterModuleTest: BaseTest() {
 
         val bean = BeanToValidate(null, null)
 
-        val response = vertk.createHttpClient().restPost<ErrorDetails>(port, "localhost", "/core/test/validationException", bean)
-        assertEquals(422, response.statusCode)
+        val response = client.post(port, "localhost", "/core/test/validationException").awaitSendJson(bean)
+        assertEquals(422, response.statusCode())
 
-        val errorDetails = response.body!!
-        assertEquals(response.statusCode, errorDetails.code)
+        val errorDetails = response.bodyAsJson<ErrorDetails>()
+        assertEquals(response.statusCode(), errorDetails.code)
 
         //assertEquals("Input validation failed", errorDetails.message)
         assertFalse(errorDetails.details.isEmpty())

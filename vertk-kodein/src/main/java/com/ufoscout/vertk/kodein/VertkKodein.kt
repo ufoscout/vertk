@@ -1,6 +1,6 @@
 package com.ufoscout.vertk.kodein
 
-import com.ufoscout.vertk.Vertk
+import io.vertx.core.Vertx
 import io.vertx.core.eventbus.EventBus
 import io.vertx.core.file.FileSystem
 import io.vertx.core.logging.LoggerFactory
@@ -16,17 +16,17 @@ object VertkKodein {
 
     private val log = LoggerFactory.getLogger(javaClass)
 
-    suspend fun start(vertk: Vertk,
+    suspend fun start(vertx: Vertx,
                       vararg modules: VertkKodeinModule): Kodein {
 
         log.info("Vertxk initialization start...")
 
         val kodein = Kodein {
             import(jxInjectorModule)
-            bind<Vertk>() with singleton { vertk }
-            bind<EventBus>() with singleton { vertk.eventBus() }
-            bind<FileSystem>() with singleton { vertk.fileSystem() }
-            bind<SharedData>() with singleton { vertk.sharedData() }
+            bind<Vertx>() with singleton { vertx }
+            bind<EventBus>() with singleton { vertx.eventBus() }
+            bind<FileSystem>() with singleton { vertx.fileSystem() }
+            bind<SharedData>() with singleton { vertx.sharedData() }
             build(this, *modules)
         }
 
@@ -37,12 +37,12 @@ object VertkKodein {
 
         log.info("VertxKComponents started")
 
-        vertk.vertx().registerVerticleFactory(VertkKodeinVerticleFactory(kodein))
+        vertx.registerVerticleFactory(VertkKodeinVerticleFactory(kodein))
 
         log.info("Initialized VertxKModules...")
         for (module in modules) {
             log.info("Initialize VertkKodeinModule [${module.javaClass.name}]")
-            module.onInit(vertk, kodein)
+            module.onInit(vertx, kodein)
         }
 
         log.info("Vertxk initialization completed")

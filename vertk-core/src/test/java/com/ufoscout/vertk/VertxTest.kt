@@ -15,7 +15,7 @@ class VertxTest: BaseTest() {
 
         val executed = AtomicBoolean(false)
 
-        vertk.executeBlocking({
+        vertk.awaitExecuteBlocking({
             executed.set(true)
         })
 
@@ -29,7 +29,7 @@ class VertxTest: BaseTest() {
         val uuid = UUID.randomUUID().toString()
         val executed = AtomicBoolean(false)
 
-        val result = vertk.executeBlocking({
+        val result = vertk.awaitExecuteBlocking({
             executed.set(true)
             uuid
         })
@@ -46,7 +46,7 @@ class VertxTest: BaseTest() {
         val executed = AtomicBoolean(false)
 
         try {
-            vertk.executeBlocking({
+            vertk.awaitExecuteBlocking({
                 executed.set(true)
                 throw RuntimeException(uuid)
             })

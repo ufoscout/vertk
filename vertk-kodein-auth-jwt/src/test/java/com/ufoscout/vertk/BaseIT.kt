@@ -7,6 +7,7 @@ import com.ufoscout.vertk.kodein.auth.AuthModule
 import com.ufoscout.vertk.kodein.web.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.kodein.web.RouterModule
+import io.vertx.core.Vertx
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -19,7 +20,7 @@ abstract class BaseIT : BaseTest() {
 
     companion object {
 
-        private var vertk: Vertk? = null
+        private var vertk: Vertx? = null
         private val port: Int = getFreePort()
         private var kodein: DKodein? = null
 
@@ -27,7 +28,7 @@ abstract class BaseIT : BaseTest() {
         fun setUpClass() = runBlocking<Unit> {
 
             System.setProperty("server.port", port.toString())
-            vertk = Vertk.vertk()
+            vertk = Vertx.vertx()
 
             kodein = VertkKodein.start(
                     vertk!!,
@@ -41,7 +42,7 @@ abstract class BaseIT : BaseTest() {
 
         @AfterAll @JvmStatic
         fun tearDownClass() = runBlocking<Unit> {
-            vertk!!.close()
+            vertk!!.awaitClose()
         }
 
         @Synchronized private fun getFreePort(): Int {
@@ -60,7 +61,7 @@ abstract class BaseIT : BaseTest() {
 
     protected fun port(): Int = port
 
-    protected fun vertk(): Vertk = vertk!!
+    protected fun vertk() = vertk!!
 
     protected fun kodein(): DKodein = kodein!!
 

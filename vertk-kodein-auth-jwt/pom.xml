@@ -24,6 +24,12 @@
       <artifactId>jwt-kotlin</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.ufoscout.vertk</groupId>
+      <artifactId>vertk-web-client</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>

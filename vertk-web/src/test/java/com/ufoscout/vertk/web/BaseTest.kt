@@ -1,9 +1,12 @@
 package com.ufoscout.vertk.web
 
-import com.ufoscout.vertk.Vertk
+import com.ufoscout.vertk.awaitListen
 import io.vertx.core.Handler
+import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServerRequest
 import io.vertx.core.logging.LoggerFactory
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.client.WebClient
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.*
 import java.text.DecimalFormat
@@ -20,15 +23,17 @@ abstract class BaseTest {
         protected val TIME_FORMAT = DecimalFormat("####,###.###", DecimalFormatSymbols(Locale.US))
         private val TEMP_DIR = "./target/junit-temp/" + System.currentTimeMillis()
 
-        var vertk = Vertk.vertk()
+        var vertk = Vertx.vertx()
         var router = Router.router(vertk)
+        var client = WebClient.create(vertk)
         var port = 0
 
         @BeforeAll @JvmStatic
         fun baseSetUp() = runBlocking<Unit> {
-            vertk = Vertk.vertk()
+            vertk = Vertx.vertx()
             router = Router.router(vertk)
-            port = vertk.createHttpServer().requestHandler(Handler <HttpServerRequest> { router.accept(it) }).listen(0).actualPort()
+            client = WebClient.create(vertk)
+            port = vertk.createHttpServer().requestHandler(Handler <HttpServerRequest> { router.accept(it) }).awaitListen(0).actualPort()
             println("Http Port " + port)
         }
 

@@ -6,8 +6,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.ufoscout.coreutils.json.JacksonJsonSerializerService
 import com.ufoscout.coreutils.json.kotlin.JsonSerializerService
-import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.VertkKodeinModule
+import io.vertx.core.Vertx
 import io.vertx.core.json.Json
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
@@ -21,7 +21,7 @@ class JsonModule(): VertkKodeinModule {
             }
     }
 
-    override suspend fun onInit(vertk: Vertk, kodein: Kodein) {
+    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
         initMapper(Json.mapper)
         initMapper(Json.prettyMapper)
     }

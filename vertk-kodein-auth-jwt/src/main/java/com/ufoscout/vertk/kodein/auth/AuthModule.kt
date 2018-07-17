@@ -6,8 +6,8 @@ import com.ufoscout.coreutils.jwt.JwtConfig
 import com.ufoscout.coreutils.jwt.JwtServiceJJWT
 import com.ufoscout.coreutils.jwt.kotlin.CoreJsonProvider
 import com.ufoscout.coreutils.jwt.kotlin.JwtService
-import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.VertkKodeinModule
+import io.vertx.core.Vertx
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
@@ -28,7 +28,7 @@ class AuthModule(val jwtConfig: JwtConfig): VertkKodeinModule {
         }
     }
 
-    override suspend fun onInit(vertk: Vertk, kodein: Kodein) {
+    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
     }
 
 }

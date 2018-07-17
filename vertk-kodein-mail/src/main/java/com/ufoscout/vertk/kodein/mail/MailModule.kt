@@ -1,7 +1,7 @@
 package com.ufoscout.vertk.kodein.mail
 
-import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.VertkKodeinModule
+import io.vertx.core.Vertx
 import org.kodein.di.Kodein
 import org.kodein.di.generic.bind
 import org.kodein.di.generic.instance
@@ -13,7 +13,7 @@ class MailModule(private val mailConfig: MailConfig): VertkKodeinModule {
         bind<MailClient>() with singleton { MailClientFactory.build(mailConfig, instance()) }
     }
 
-    override suspend fun onInit(vertk: Vertk, kodein: Kodein) {
+    override suspend fun onInit(vertx: Vertx, kodein: Kodein) {
     }
 
 }

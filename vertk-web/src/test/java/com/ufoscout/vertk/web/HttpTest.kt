@@ -1,5 +1,7 @@
 package com.ufoscout.vertk.web
 
+import com.ufoscout.vertk.*
+import com.ufoscout.vertk.web.client.*
 import com.ufoscout.vertk.web.verticle.HttpVerticle
 import com.ufoscout.vertk.web.verticle.RequestDTO
 import com.ufoscout.vertk.web.verticle.ResponseDTO
@@ -15,70 +17,73 @@ class HttpTest: BaseTest() {
     companion object {
         @BeforeAll @JvmStatic
         fun deployStubVerticle() = runBlocking<Unit> {
-            vertk.deployVerticle<HttpVerticle>()
+            vertk.awaitDeployVerticle<HttpVerticle>()
         }
     }
 
     @Test
     fun shouldCallDelete() = runBlocking<Unit> {
-        val response = vertk.createHttpClient()
-                .restDelete<ResponseDTO>(port, "localhost", HttpVerticle.path)
+        val response = client.delete(port, "localhost", HttpVerticle.path)
+                .awaitSend()
+        val body = response.bodyAsJson(ResponseDTO::class.java)
         assertNotNull(response)
-        assertNotNull(response.body)
-        assertEquals(200, response.statusCode)
-        assertEquals("DELETE", response.body!!.message)
+        assertNotNull(body)
+        assertEquals(200, response.statusCode())
+        assertEquals("DELETE", body!!.message)
     }
 
     @Test
     fun shouldCallGet() = runBlocking<Unit> {
-        val response = vertk.createHttpClient()
-                .restGet<ResponseDTO>(port, "localhost", HttpVerticle.path)
-        assertNotNull(response)
-        assertNotNull(response.body)
-        assertEquals(200, response.statusCode)
-        assertEquals("GET", response.body!!.message)
-    }
+        val response = client.get(port, "localhost", HttpVerticle.path)
+                .awaitSend()
+        val body = response.bodyAsJson<ResponseDTO>()
 
-    @Test
-    fun shouldCallOptions() = runBlocking<Unit> {
-        val response = vertk.createHttpClient()
-                .restOptions<ResponseDTO>(port, "localhost", HttpVerticle.path)
         assertNotNull(response)
-        assertNotNull(response.body)
-        assertEquals(200, response.statusCode)
-        assertEquals("OPTIONS", response.body!!.message)
+        assertNotNull(body)
+        assertEquals(200, response.statusCode())
+        assertEquals("GET", body!!.message)
     }
 
     @Test
     fun shouldCallPatch() = runBlocking<Unit> {
         val request = RequestDTO(UUID.randomUUID().toString())
-        val response = vertk.createHttpClient()
-                .restPatch<ResponseDTO>(port, "localhost", HttpVerticle.path, request)
+
+        val response = client.patch(port, "localhost", HttpVerticle.path)
+                .awaitSendJson(request)
+
+        val body = response.bodyAsJson(ResponseDTO::class.java)
+
         assertNotNull(response)
-        assertNotNull(response.body)
-        assertEquals(200, response.statusCode)
-        assertEquals("PATCH-${request.message}", response.body!!.message)
+        assertNotNull(body)
+        assertEquals(200, response.statusCode())
+        assertEquals("PATCH-${request.message}", body!!.message)
     }
 
     @Test
     fun shouldCallPost() = runBlocking<Unit> {
         val request = RequestDTO(UUID.randomUUID().toString())
-        val response = vertk.createHttpClient()
-                .restPost<ResponseDTO>(port, "localhost", HttpVerticle.path, request)
+
+        val response = client.post(port, "localhost", HttpVerticle.path)
+                .awaitSendJson(request)
+
+        val body = response.bodyAsJson(ResponseDTO::class.java)
+
         assertNotNull(response)
-        assertNotNull(response.body)
-        assertEquals(200, response.statusCode)
-        assertEquals("POST-${request.message}", response.body!!.message)
+        assertNotNull(body)
+        assertEquals(200, response.statusCode())
+        assertEquals("POST-${request.message}", body!!.message)
     }
 
     @Test
     fun shouldCallPut() = runBlocking<Unit> {
         val request = RequestDTO(UUID.randomUUID().toString())
-        val response = vertk.createHttpClient()
-                .restPut<ResponseDTO>(port, "localhost", HttpVerticle.path, request)
+        val response = client.put(port, "localhost", HttpVerticle.path)
+                .awaitSendJson(request)
+
+        val body = response.bodyAsJson(ResponseDTO::class.java)
         assertNotNull(response)
-        assertNotNull(response.body)
-        assertEquals(200, response.statusCode)
-        assertEquals("PUT-${request.message}", response.body!!.message)
+        assertNotNull(body)
+        assertEquals(200, response.statusCode())
+        assertEquals("PUT-${request.message}", body!!.message)
     }
 }

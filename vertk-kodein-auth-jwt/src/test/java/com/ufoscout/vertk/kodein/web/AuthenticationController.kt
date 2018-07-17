@@ -1,6 +1,7 @@
 package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.kodein.auth.AuthContextService
+import com.ufoscout.vertk.web.*
 import io.vertx.core.logging.LoggerFactory
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 
@@ -18,24 +19,24 @@ class AuthenticationController (val routerService: RouterService,
 
         val router = routerService.router()
 
-        router.restPost<LoginDto>(BASE_AUTH_API + "/login") { rc, loginDto ->
+        router.awaitRestPost<LoginDto>(BASE_AUTH_API + "/login") { rc, loginDto ->
             val login = userService.login(loginDto.username, loginDto.password)
             val token = auth.generateToken(login)
             logger.info("Return token: [${token}]")
             LoginResponseDto(token)
         }
 
-        router.restGet(BASE_AUTH_API + "/test/public") {
+        router.awaitRestGet(BASE_AUTH_API + "/test/public") {
             val authContext = auth.from(it.request())
             authContext.auth
         }
 
-        router.restGet(BASE_AUTH_API + "/test/authenticated") {
+        router.awaitRestGet(BASE_AUTH_API + "/test/authenticated") {
             val authContext = auth.from(it).isAuthenticated()
             authContext.auth
         }
 
-        router.restGet(BASE_AUTH_API + "/test/protected") {
+        router.awaitRestGet(BASE_AUTH_API + "/test/protected") {
             val authContext = auth.from(it).hasRole("ADMIN")
             authContext.auth
         }

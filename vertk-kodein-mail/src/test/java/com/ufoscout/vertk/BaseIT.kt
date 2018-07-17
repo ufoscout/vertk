@@ -4,6 +4,7 @@ import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.kodein.mail.MailClientFactory
 import com.ufoscout.vertk.kodein.mail.MailConfig
 import com.ufoscout.vertk.kodein.mail.MailModule
+import io.vertx.core.Vertx
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -15,7 +16,7 @@ abstract class BaseIT : BaseTest() {
 
     companion object {
 
-        private var vertk: Vertk? = null
+        private var vertk: Vertx? = null
         private var kodein: DKodein? = null
         private var mailConfig: MailConfig? = null
 
@@ -33,7 +34,7 @@ abstract class BaseIT : BaseTest() {
                             .setPort(mh!!.getMappedPort(1025))
             )
 
-            vertk = Vertk.vertk()
+            vertk = Vertx.vertx()
 
             kodein = VertkKodein.start(
                     vertk!!,
@@ -49,7 +50,7 @@ abstract class BaseIT : BaseTest() {
 
     }
 
-    protected fun vertk(): Vertk = vertk!!
+    protected fun vertk(): Vertx = vertk!!
     protected fun mailConfig() = mailConfig!!
     protected fun kodein(): DKodein = kodein!!
 

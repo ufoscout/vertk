@@ -1,9 +1,9 @@
 package com.ufoscout.vertk.kodein.json
 
 import com.ufoscout.coreutils.json.kotlin.JsonSerializerService
-import com.ufoscout.vertk.Vertk
 import com.ufoscout.vertk.kodein.VertkKodein
 import com.ufoscout.vertk.BaseTest
+import io.vertx.core.Vertx
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
@@ -21,12 +21,12 @@ class JsonModuleTest : BaseTest() {
     companion object {
 
         private var jsonSerializerService: JsonSerializerService? = null
-        private var vertk: Vertk? = null
+        private var vertk: Vertx? = null
 
         @BeforeAll @JvmStatic
         fun setUpClass() = runBlocking<Unit> {
 
-            vertk = Vertk.vertk()
+            vertk = Vertx.vertx()
 
             val kodein = VertkKodein.start(vertk!!, JsonModule())
             jsonSerializerService = kodein.direct.instance<JsonSerializerService>()
