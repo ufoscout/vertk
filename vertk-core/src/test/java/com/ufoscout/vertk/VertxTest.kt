@@ -1,14 +1,53 @@
 package com.ufoscout.vertk
 
 import kotlinx.coroutines.experimental.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.util.*
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 class VertxTest: BaseTest() {
+
+    @Test
+    fun shouldLaunchSuspendableFunctionsInCurrentContext(): Unit {
+
+        val countDownLatch = CountDownLatch(1)
+        val thread = AtomicReference<String>("")
+
+        vertk.launch {
+                thread.set(getThreadName())
+                countDownLatch.countDown()
+        }
+
+        countDownLatch.await()
+        println("Thread is: " + thread.get())
+        assertTrue(thread.get().contains("vert"))
+        assertFalse(thread.get().contains("worker"))
+    }
+
+    @Test
+    fun shouldLaunchSuspendableFunctionsInWorkerPool(): Unit {
+
+        val countDownLatch = CountDownLatch(1)
+        val thread = AtomicReference<String>("")
+
+        vertk.executeBlocking({
+            thread.set(getThreadName())
+            countDownLatch.countDown()
+        })
+
+        countDownLatch.await()
+        println("Thread is: " + thread.get())
+        assertTrue(thread.get().contains("vert"))
+        assertTrue(thread.get().contains("worker"))
+    }
+
+    suspend fun getThreadName(): String {
+        return Thread.currentThread().name
+    }
 
     @Test
     fun shouldExecuteBlocking() = runBlocking<Unit> {
