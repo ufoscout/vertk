@@ -17,7 +17,7 @@ class VertxTest: BaseTest() {
         val countDownLatch = CountDownLatch(1)
         val thread = AtomicReference<String>("")
 
-        vertk.launch {
+        vertx.launch {
                 thread.set(getThreadName())
                 countDownLatch.countDown()
         }
@@ -34,7 +34,7 @@ class VertxTest: BaseTest() {
         val countDownLatch = CountDownLatch(1)
         val thread = AtomicReference<String>("")
 
-        vertk.executeBlocking({
+        vertx.executeBlocking({
             thread.set(getThreadName())
             countDownLatch.countDown()
         })
@@ -54,7 +54,7 @@ class VertxTest: BaseTest() {
 
         val executed = AtomicBoolean(false)
 
-        vertk.awaitExecuteBlocking({
+        vertx.awaitExecuteBlocking({
             executed.set(true)
         })
 
@@ -68,7 +68,7 @@ class VertxTest: BaseTest() {
         val uuid = UUID.randomUUID().toString()
         val executed = AtomicBoolean(false)
 
-        val result = vertk.awaitExecuteBlocking({
+        val result = vertx.awaitExecuteBlocking({
             executed.set(true)
             uuid
         })
@@ -85,7 +85,7 @@ class VertxTest: BaseTest() {
         val executed = AtomicBoolean(false)
 
         try {
-            vertk.awaitExecuteBlocking({
+            vertx.awaitExecuteBlocking({
                 executed.set(true)
                 throw RuntimeException(uuid)
             })

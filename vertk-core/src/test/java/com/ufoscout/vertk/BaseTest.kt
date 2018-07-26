@@ -17,7 +17,7 @@ abstract class BaseTest {
     companion object {
 
         protected val TIME_FORMAT = DecimalFormat("####,###.###", DecimalFormatSymbols(Locale.US))
-        val vertk = Vertx.vertx()
+        val vertx = Vertx.vertx()
 
     }
 

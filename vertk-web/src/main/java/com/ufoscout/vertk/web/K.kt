@@ -71,7 +71,12 @@ fun rest(route: Route, handler: suspend (rc: RoutingContext) -> Any) {
                 launch(Vertx.currentContext().dispatcher()) {
                     try {
                         val result = handler(it)
-                        it.response().putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(result))
+                        var resultJson = if (result is String) {
+                            result
+                        } else {
+                            Json.encode(result)
+                        }
+                        it.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson)
                     } catch (e: Exception) {
                         it.fail(e)
                     }
@@ -91,7 +96,12 @@ inline fun <reified I : Any> restWithBody(route: Route, noinline handler: suspen
                         }
                         val body = bodyBuffer.toJsonObject().mapTo(I::class.java)
                         val result = handler(rc, body)
-                        rc.response().putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(result))
+                        var resultJson = if (result is String) {
+                            result
+                        } else {
+                            Json.encode(result)
+                        }
+                        rc.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson)
                     } catch (e: Exception) {
                         rc.fail(e)
                     }

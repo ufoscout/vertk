@@ -28,7 +28,7 @@ internal class MailServiceImplIt: BaseIT() {
         message.to = listOf(to)
         message.cc = listOf(cc1, cc2)
         message.text = "this is the plain message text"
-        message.html = "this is html text <a href=\"http://vertk.io\">vertk.io</a>"
+        message.html = "this is html text <a href=\"http://vertx.io\">vertx.io</a>"
 
         val result = mailClient.sendEmail(message)
         logger.info("Mail sent. Result: ${result}")
