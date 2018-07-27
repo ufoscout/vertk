@@ -8,6 +8,7 @@ import com.ufoscout.vertk.kodein.web.RouterConfig
 import com.ufoscout.vertk.kodein.json.JsonModule
 import com.ufoscout.vertk.kodein.web.RouterModule
 import io.vertx.core.Vertx
+import io.vertx.core.http.HttpServerOptions
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
@@ -35,7 +36,7 @@ abstract class BaseIT : BaseTest() {
                     AuthModule(JwtConfig("secret", "HS512", 60)),
                     JsonModule(),
                     AuthTestModule(),
-                    RouterModule(RouterConfig(port))
+                    RouterModule(RouterConfig(port), HttpServerOptions())
             ).direct
 
         }

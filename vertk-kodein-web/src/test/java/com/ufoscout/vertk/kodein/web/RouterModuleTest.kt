@@ -6,6 +6,7 @@ import com.ufoscout.vertk.BaseTest
 import com.ufoscout.vertk.web.client.awaitSend
 import com.ufoscout.vertk.web.client.awaitSendJson
 import com.ufoscout.vertk.web.client.bodyAsJson
+import io.vertx.core.http.HttpServerOptions
 import io.vertx.ext.web.client.WebClient
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
@@ -32,7 +33,7 @@ class RouterModuleTest: BaseTest() {
     fun setup() = runBlocking {
         val kodein = VertkKodein.start(vertk,
                 JsonModule(),
-                RouterModule(RouterConfig(port)),
+                RouterModule(RouterConfig(port), HttpServerOptions()),
                 RouterTestModule()
         )
         assertNotNull(kodein.direct.instance<RouterService>())

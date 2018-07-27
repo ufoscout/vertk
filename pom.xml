@@ -67,7 +67,7 @@
     <logback.version>1.2.3</logback.version>
     <mockito.version>2.19.0</mockito.version>
     <testcontainers.version>1.8.0</testcontainers.version>
-    <vertx.version>3.5.2</vertx.version>
+    <vertx.version>3.5.3</vertx.version>
 
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <kotlin.version>1.2.50</kotlin.version>
