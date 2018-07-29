@@ -44,6 +44,18 @@ suspend fun Vertx.awaitDeployVerticle(name: String, deploymentOptions: Deploymen
     }
 }
 
+suspend fun Vertx.awaitDeployVerticle(supplier: () -> Verticle, deploymentOptions: DeploymentOptions = DeploymentOptions()) {
+    awaitResult<String> {
+        this.deployVerticle(java.util.function.Supplier { supplier() }, deploymentOptions, it)
+    }
+}
+
+suspend fun Vertx.awaitDeployVerticle(verticle: Verticle, deploymentOptions: DeploymentOptions = DeploymentOptions()) {
+    awaitResult<String> {
+        this.deployVerticle(verticle, deploymentOptions, it)
+    }
+}
+
 inline suspend fun <reified T : Verticle> Vertx.awaitDeployVerticle(deploymentOptions: DeploymentOptions = DeploymentOptions()) {
     awaitResult<String> {
         this.deployVerticle(T::class.java, deploymentOptions, it)
