@@ -33,7 +33,8 @@ abstract class BaseIT : BaseTest() {
 
             kodein = VertkKodein.start(
                     vertk!!,
-                    AuthModule(JwtConfig("secret", "HS512", 60)),
+                    AuthModule(JwtConfig("secretslfhsadkfhadkfhakjfhawkfhawjfhawkfhaksfhakhwith9t249tyq43tq3tph53qcq98wrhpc924cthrw9ptcqh29ch5q29pthcq249ptheighcqn29cthor"
+                            , "HS512", 60)),
                     JsonModule(),
                     AuthTestModule(),
                     RouterModule(RouterConfig(port), HttpServerOptions())
