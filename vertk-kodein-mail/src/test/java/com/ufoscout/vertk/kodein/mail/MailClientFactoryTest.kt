@@ -27,6 +27,14 @@ internal class MailClientFactoryIT: BaseIT() {
     }
 
     @Test
+    fun shouldReturnInMemoryMailClient() {
+        val mailConfig = MailConfig(
+                clientType = MailClientFactory.IN_MEMORY
+        )
+        assertTrue(MailClientFactory.build(mailConfig, vertk()) is InMemoryMailClient)
+    }
+
+    @Test
     fun shouldFailIfUnknownMailClient() {
         assertThrows<RuntimeException> {
             val mailConfig = MailConfig(
