@@ -31,7 +31,19 @@ internal class MailClientFactoryIT: BaseIT() {
         val mailConfig = MailConfig(
                 clientType = MailClientFactory.IN_MEMORY
         )
-        assertTrue(MailClientFactory.build(mailConfig, vertk()) is InMemoryMailClient)
+        val client = MailClientFactory.build(mailConfig, vertk())
+        assertTrue(client is InMemoryMailClientDecorator)
+        assertTrue((client as InMemoryMailClientDecorator).decoratedMailClient is NoOpsMailClient)
+    }
+
+    @Test
+    fun shouldReturnInMemoryMailClientDecoratorForVertx() {
+        val mailConfig = MailConfig(
+                clientType = MailClientFactory.IN_MEMORY_VERTX
+        )
+        val client = MailClientFactory.build(mailConfig, vertk())
+        assertTrue(client is InMemoryMailClientDecorator)
+        assertTrue((client as InMemoryMailClientDecorator).decoratedMailClient is VertxMailClient)
     }
 
     @Test
