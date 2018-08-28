@@ -11,6 +11,13 @@ import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.experimental.launch
 import java.lang.Exception
 
+inline fun Route.awaitHandler(noinline handler: suspend (rc: RoutingContext) -> Any) {
+    this.handler {
+        launch(Vertx.currentContext().dispatcher()) {
+            handler(it)
+        }
+    }
+}
 
 fun Router.awaitRestDelete(path: String, handler: suspend (rc: RoutingContext) -> Any) {
     rest(this.delete(path), handler)
@@ -67,8 +74,7 @@ inline fun <reified I : Any> Router.awaitRestPutWithRegex(regex: String, noinlin
 fun rest(route: Route, handler: suspend (rc: RoutingContext) -> Any) {
     route
             .produces("application/json")
-            .handler({
-                launch(Vertx.currentContext().dispatcher()) {
+            .awaitHandler({
                     try {
                         val result = handler(it)
                         var resultJson = if (result is String) {
@@ -80,7 +86,6 @@ fun rest(route: Route, handler: suspend (rc: RoutingContext) -> Any) {
                     } catch (e: Exception) {
                         it.fail(e)
                     }
-                }
             })
 }
 
@@ -88,8 +93,7 @@ inline fun <reified I : Any> restWithBody(route: Route, noinline handler: suspen
     route
             .consumes("application/json")
             .produces("application/json")
-            .handler({ rc ->
-                launch(Vertx.currentContext().dispatcher()) {
+            .awaitHandler({ rc ->
                     try {
                         val bodyBuffer = awaitEvent<Buffer> {
                             rc.request().bodyHandler(it)
@@ -105,7 +109,6 @@ inline fun <reified I : Any> restWithBody(route: Route, noinline handler: suspen
                     } catch (e: Exception) {
                         rc.fail(e)
                     }
-                }
             })
 }
 
