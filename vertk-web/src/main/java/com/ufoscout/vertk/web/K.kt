@@ -2,6 +2,7 @@ package com.ufoscout.vertk.web
 
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
+import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.json.Json
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.Router
@@ -10,6 +11,10 @@ import io.vertx.kotlin.coroutines.awaitEvent
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.experimental.launch
 import java.lang.Exception
+
+inline fun HttpServerResponse.endWithJson(obj: Any) {
+    this.putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(obj))
+}
 
 inline fun Route.awaitHandler(noinline handler: suspend (rc: RoutingContext) -> Any) {
     this.handler {

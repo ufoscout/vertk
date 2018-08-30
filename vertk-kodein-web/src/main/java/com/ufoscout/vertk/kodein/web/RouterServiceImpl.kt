@@ -1,6 +1,7 @@
 package com.ufoscout.vertk.kodein.web
 
 import com.ufoscout.vertk.awaitListen
+import com.ufoscout.vertk.web.endWithJson
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServerOptions
@@ -57,7 +58,7 @@ class RouterServiceImpl(val routerConfig: RouterConfig,
                 val uuid = UUID.randomUUID().toString()
                 val message = "Error code: " + uuid
                 logger.error(uuid + " : " + exception.message, exception)
-                endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message, WebException.DEFAULT_DETAILS))
+                response.setStatusCode(statusCode).endWithJson(ErrorDetails(statusCode, message, WebException.DEFAULT_DETAILS))
             }
         }
 
@@ -66,7 +67,7 @@ class RouterServiceImpl(val routerConfig: RouterConfig,
     private fun reply(response: HttpServerResponse, exception: WebException) {
         logger.error(exception.message, exception)
         val statusCode = exception.statusCode()
-        endWithJson(response.setStatusCode(statusCode), ErrorDetails(statusCode, message(exception), exception.details()))
+        response.setStatusCode(statusCode).endWithJson(ErrorDetails(statusCode, message(exception), exception.details()))
     }
 
     private fun message(exception: WebException): String {
@@ -76,7 +77,4 @@ class RouterServiceImpl(val routerConfig: RouterConfig,
         return ""
     }
 
-    private fun endWithJson(response: HttpServerResponse, obj: Any) {
-        response.putHeader("Content-Type", "application/json; charset=utf-8").end(Json.encode(obj))
-    }
 }
