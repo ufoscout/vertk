@@ -19,7 +19,11 @@ inline fun HttpServerResponse.endWithJson(obj: Any) {
 inline fun Route.awaitHandler(noinline handler: suspend (rc: RoutingContext) -> Any) {
     this.handler {
         launch(Vertx.currentContext().dispatcher()) {
-            handler(it)
+            try {
+                handler(it)
+            } catch (e: Exception) {
+                it.fail(e)
+            }
         }
     }
 }
@@ -80,7 +84,6 @@ fun rest(route: Route, handler: suspend (rc: RoutingContext) -> Any) {
     route
             .produces("application/json")
             .awaitHandler({
-                    try {
                         val result = handler(it)
                         var resultJson = if (result is String) {
                             result
@@ -88,9 +91,6 @@ fun rest(route: Route, handler: suspend (rc: RoutingContext) -> Any) {
                             Json.encode(result)
                         }
                         it.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson)
-                    } catch (e: Exception) {
-                        it.fail(e)
-                    }
             })
 }
 
@@ -99,7 +99,6 @@ inline fun <reified I : Any> restWithBody(route: Route, noinline handler: suspen
             .consumes("application/json")
             .produces("application/json")
             .awaitHandler({ rc ->
-                    try {
                         val bodyBuffer = awaitEvent<Buffer> {
                             rc.request().bodyHandler(it)
                         }
@@ -111,9 +110,7 @@ inline fun <reified I : Any> restWithBody(route: Route, noinline handler: suspen
                             Json.encode(result)
                         }
                         rc.response().putHeader("Content-Type", "application/json; charset=utf-8").end(resultJson)
-                    } catch (e: Exception) {
-                        rc.fail(e)
-                    }
+
             })
 }
 
