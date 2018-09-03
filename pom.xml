@@ -70,7 +70,7 @@
     <vertx.version>3.5.3</vertx.version>
 
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-    <kotlin.version>1.2.60</kotlin.version>
+    <kotlin.version>1.2.61</kotlin.version>
 
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     <maven-failsafe-plugin.version>${maven-surefire-plugin.version}</maven-failsafe-plugin.version>
