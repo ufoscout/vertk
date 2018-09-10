@@ -60,7 +60,7 @@
   <properties>
     <java.version>1.8</java.version>
 
-    <coreutils.version>1.7.2</coreutils.version>
+    <coreutils.version>1.8.0</coreutils.version>
     <jackson.version>[2.9.6,2.99.99]</jackson.version>
     <junit.version>5.2.0</junit.version>
     <kodein.version>5.2.0</kodein.version>
