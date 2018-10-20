@@ -7,8 +7,8 @@ class InMemoryRolesProvider: RolesProvider {
 
     companion object {
         val roles = mapOf(
-                Pair("ADMIN", Role(0, "ADMIN", arrayOf())),
-                Pair("USER", Role(1, "USER", arrayOf()))
+                Pair("ADMIN", Role("ADMIN", arrayOf())),
+                Pair("USER", Role( "USER", arrayOf()))
         )
     }
 
