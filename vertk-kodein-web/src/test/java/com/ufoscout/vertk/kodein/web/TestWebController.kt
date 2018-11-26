@@ -4,13 +4,14 @@ import com.ufoscout.coreutils.validation.SimpleValidatorService
 import com.ufoscout.coreutils.validation.ValidationException
 import com.ufoscout.vertk.web.awaitRestPost
 import io.vertx.kotlin.coroutines.CoroutineVerticle
+import java.lang.RuntimeException
 
 class TestWebController(val routerService: RouterService, val webExceptionService: WebExceptionService): CoroutineVerticle() {
 
     override suspend fun start() {
         println("Start TestWebController")
 
-        webExceptionService.registerTransformer<CustomTestException>({exp -> WebException(code = 12345, message = "CustomTestExceptionMessage") })
+        webExceptionService.registerTransformer<CustomTestException> {ex -> WebException(cause = ex, code = 12345, message = "CustomTestExceptionMessage") }
 
         val router = routerService.router()
 
@@ -31,7 +32,7 @@ class TestWebController(val routerService: RouterService, val webExceptionServic
         router.get("/core/test/webException/:code/:message").handler {
             var code = it.request().getParam("code")
             var message = it.request().getParam("message")
-            throw WebException(message, code.toInt())
+            throw WebException(RuntimeException(), message, code.toInt())
         }
 
         router.get("/core/test/slow").handler {

@@ -10,10 +10,12 @@ class WebException : RuntimeException {
     private val statusCode: Int
     private val details: Map<String, List<String>>
 
+    /*
     constructor(message: String = "", code: Int = HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), details: Map<String, List<String>> = DEFAULT_DETAILS) : super(message) {
         statusCode = code
         this.details = details
     }
+    */
 
     constructor(cause: Throwable, message: String = "", code: Int = HttpResponseStatus.INTERNAL_SERVER_ERROR.code(), details: Map<String, List<String>> = DEFAULT_DETAILS) : super(message, cause) {
         statusCode = code

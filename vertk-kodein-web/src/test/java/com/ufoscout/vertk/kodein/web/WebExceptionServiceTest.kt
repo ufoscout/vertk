@@ -16,8 +16,8 @@ class WebExceptionServiceTest : BaseTest() {
 
     @Test
     fun shouldApplyTheCorrectTransformer() {
-        webEx.registerTransformer<ExceptionOne>({ex -> WebException(code = 1) })
-        webEx.registerTransformer<ExceptionTwo>({ex -> WebException(code = 2) })
+        webEx.registerTransformer<ExceptionOne> {ex -> WebException(cause = ex, code = 1) }
+        webEx.registerTransformer<ExceptionTwo> {ex -> WebException(cause = ex, code = 2) }
 
         assertNull(webEx.get(RuntimeException()))
         assertEquals(1, webEx.get(ExceptionOne())!!.statusCode())

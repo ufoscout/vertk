@@ -12,10 +12,10 @@ import io.netty.handler.codec.http.HttpResponseStatus
 class AuthSetup(val webExceptionService: WebExceptionService): VertkKodeinStartable {
 
     override suspend fun start() {
-        webExceptionService.registerTransformer<UnauthenticatedException>({ ex -> WebException(code = HttpResponseStatus.UNAUTHORIZED.code(), message = "NotAuthenticated") })
-        webExceptionService.registerTransformer<BadCredentialsException>({ ex -> WebException(code = HttpResponseStatus.UNAUTHORIZED.code(), message = "BadCredentials") })
-        webExceptionService.registerTransformer<UnauthorizedException>({ ex -> WebException(code = HttpResponseStatus.FORBIDDEN.code(), message = "AccessDenied") })
-        webExceptionService.registerTransformer<TokenExpiredException>({ exp -> WebException(code = HttpResponseStatus.UNAUTHORIZED.code(), message = "TokenExpired") })
+        webExceptionService.registerTransformer<UnauthenticatedException> { ex -> WebException(cause = ex, code = HttpResponseStatus.UNAUTHORIZED.code(), message = "NotAuthenticated") }
+        webExceptionService.registerTransformer<BadCredentialsException> { ex -> WebException(cause = ex, code = HttpResponseStatus.UNAUTHORIZED.code(), message = "BadCredentials") }
+        webExceptionService.registerTransformer<UnauthorizedException> { ex -> WebException(cause = ex, code = HttpResponseStatus.FORBIDDEN.code(), message = "AccessDenied") }
+        webExceptionService.registerTransformer<TokenExpiredException> { ex -> WebException(cause = ex, code = HttpResponseStatus.UNAUTHORIZED.code(), message = "TokenExpired") }
     }
 
 }
