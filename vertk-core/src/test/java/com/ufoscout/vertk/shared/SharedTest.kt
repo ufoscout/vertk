@@ -1,14 +1,11 @@
-package com.ufoscout.vertk
+package com.ufoscout.vertk.shared
 
+import com.ufoscout.vertk.BaseTest
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
 import java.util.*
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
 
 class SharedTest: BaseTest() {
 

@@ -1,16 +1,11 @@
-package com.ufoscout.vertk
+package com.ufoscout.vertk.eventbus
 
-import com.ufoscout.vertk.eventbus.awaitConsumer
-import com.ufoscout.vertk.eventbus.awaitSend
+import com.ufoscout.vertk.BaseTest
 import io.vertx.core.eventbus.Message
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
 import java.util.*
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicReference
 
 class EventBusTest: BaseTest() {
 

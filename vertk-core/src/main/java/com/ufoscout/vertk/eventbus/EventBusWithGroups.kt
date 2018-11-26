@@ -1,5 +1,9 @@
 package com.ufoscout.vertk.eventbus
 
+import com.ufoscout.vertk.shared.awaitGetAsyncMap
+import com.ufoscout.vertk.shared.awaitPut
+import com.ufoscout.vertk.shared.awaitRemoveIfPresent
+import com.ufoscout.vertk.shared.awaitValues
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.Message
 import io.vertx.core.shareddata.AsyncMap
@@ -33,85 +37,86 @@ class EventBusWithGroups<T>(val vertx: Vertx, val address: String, val member: S
      * Register a consumer for a named group.
      * If more than one consumer for the same group is present, only one consumer will receive the message.
      */
-    fun consume(groupName: String, handler: (Message<T>) -> Unit) {
-        put(groupName) { vertx.eventBus().consumer<T>(it, handler) }
+    suspend fun consumer(groupName: String, handler: (Message<T>) -> Unit): GroupMessageConsumer<T> {
+        return GroupMessageConsumer<T>(
+                member = member,
+                address = address,
+                groupName = groupName,
+                map = load(),
+                vertxConsumer = vertx.eventBus().consumer<T>(put(groupName), handler)
+        )
     }
 
     /**
      * Register a consumer for a named group.
      * If more than one consumer for the same group is present, only one consumer will receive the message.
      */
-    fun awaitConsume(groupName: String, handler: suspend (T) -> Unit) {
-        put(groupName) { vertx.eventBus().awaitConsumer<T>(it, handler) }
+    suspend fun awaitConsumer(groupName: String, handler: suspend (T) -> Unit): GroupMessageConsumer<T> {
+        return GroupMessageConsumer<T>(
+                member = member,
+                address = address,
+                groupName = groupName,
+                map = load(),
+                vertxConsumer = vertx.eventBus().awaitConsumer<T>(put(groupName), handler)
+        )
     }
 
-    private fun put(route: String, handler: (String) -> Unit) {
-        load { map ->
-            val addressMember = createAddressMember(address, route, member)
-            val addressRoute = createAddressRoute(address, route)
-            map.putIfAbsent(addressMember, addressRoute) { ar ->
-                if (ar.succeeded()) {
-                    LOG.debug("Added - address: {}, publish: {}", address, route)
-                    handler.invoke(addressRoute)
-                } else {
-                    LOG.error("Failed to add - address: {}, publish: {}", address, route, ar.cause())
-                }
-            }
-        }
-    }
+    private suspend fun put(route: String): String {
+        val map = load()
+        val addressMember = createAddressMember(address, route, member)
+        val addressRoute = createAddressRoute(address, route)
 
-    /**
-     * ToDo: Remove the consumer based on the groupName
-     * The current implementation does not work. The consumer should be removed from vertx eventbus
-     */
-    fun remove(groupName: String) {
-        load { map ->
-            val addressMember = createAddressMember(address, groupName, member)
-            val addressRoute = createAddressRoute(address, groupName)
-            map.removeIfPresent(addressMember, addressRoute) { ar ->
-                if (ar.succeeded()) {
-                    LOG.debug("Removed - address: {}, publish: {}", address, groupName)
-                } else {
-                    LOG.error("Failed to remove - address: {}, publish: {}", address, groupName, ar.cause())
-                }
-            }
-        }
+        map.awaitPut(addressMember, addressRoute)
+        LOG.debug("Added - address: {}, publish: {}", address, route)
+
+        return addressRoute
     }
 
     /**
      * Publish a message on the bus, exactly one consumer per group will receive it.
      */
-    fun publish(message: T) {
-        load { map ->
-            map.values { ar ->
-                if (ar.succeeded()) {
-                    LOG.debug("Routing - address: {}, message: {}", address, message)
-                    val routes = HashSet<String>(ar.result())
-                    if (!routes.isEmpty()) {
-                        routes.forEach { route -> vertx.eventBus().send(route, message) }
-                    } else {
-                        LOG.warn("No routes - address: {}, message: {}", address, message)
-                    }
-                } else {
-                    LOG.error("Failed to publish - address: {}, message: {}", address, message, ar.cause())
-                }
-            }
+    suspend fun publish(message: T) {
+        val map = load()
+        LOG.trace("Routing - address: {}, message: {}", address, message)
+        val routes = HashSet<String>(map.awaitValues())
+        if (!routes.isEmpty()) {
+            routes.forEach { route -> vertx.eventBus().send(route, message) }
+        } else {
+            LOG.warn("No routes - address: {}, message: {}", address, message)
         }
     }
 
-    private fun load(handler: (AsyncMap<String, String>) -> Unit) {
-        if (table != null) {
-            handler.invoke(table!!)
+    private suspend fun load(): AsyncMap<String, String> {
+        if (table == null) {
+            table = vertx.sharedData().awaitGetAsyncMap<String, String>(address)
+            LOG.debug("Loaded - address: {}", address)
+        }
+        return table!!
+    }
+
+}
+
+class GroupMessageConsumer<T>(
+        private val map: AsyncMap<String, String>,
+        private val vertxConsumer: io.vertx.core.eventbus.MessageConsumer<T>,
+        val groupName: String,
+        val address: String,
+        val member: String
+) {
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(GroupMessageConsumer::class.java)
+    }
+
+    suspend fun unregister() {
+        val addressMember = EventBusWithGroups.createAddressMember(address, groupName, member)
+        val addressRoute = EventBusWithGroups.createAddressRoute(address, groupName)
+
+        if (map.awaitRemoveIfPresent(addressMember, addressRoute)) {
+            LOG.debug("Removed - address: {}, publish: {}", address, groupName)
+            vertxConsumer.awaitUnregister()
         } else {
-            vertx.sharedData().getAsyncMap<String, String>(address) { ar ->
-                if (ar.succeeded()) {
-                    LOG.debug("Loaded - address: {}", address)
-                    table = ar.result()
-                    handler.invoke(table!!)
-                } else {
-                    LOG.error("Failed to load - address: {}", address, ar.cause())
-                }
-            }
+            LOG.error("Failed to remove - address: {}, publish: {}", address, groupName)
         }
     }
 

@@ -39,3 +39,7 @@ inline fun <T> EventBus.awaitConsumer(address: String, noinline handler: suspend
 suspend fun EventBus.awaitClose() {
     awaitResult<Void> { this.close(it) }
 }
+
+suspend fun <T> MessageConsumer<T>.awaitUnregister() {
+    awaitResult<Void> { this.unregister(it) }
+}
