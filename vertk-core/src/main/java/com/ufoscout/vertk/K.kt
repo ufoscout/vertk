@@ -1,14 +1,16 @@
 package com.ufoscout.vertk
 
+import com.ufoscout.vertk.eventbus.EventBusWithGroups
 import io.vertx.core.*
-import io.vertx.kotlin.coroutines.awaitResult
-import io.vertx.core.http.HttpServer;
+import io.vertx.core.http.HttpServer
 import io.vertx.core.shareddata.AsyncMap
 import io.vertx.core.shareddata.Counter
 import io.vertx.core.shareddata.Lock
 import io.vertx.core.shareddata.SharedData
+import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.experimental.runBlocking
+import java.util.*
 
 
 suspend fun HttpServer.awaitListen(port: Int): HttpServer {
@@ -84,6 +86,15 @@ suspend fun <R> Vertx.awaitExecuteBlocking(action: suspend () -> R, ordered: Boo
     }
 
 }
+
+/**
+ * Returns a new EventBusWithGroups
+ */
+fun <T> Vertx.eventBusWithGroups(address: String, member: String = UUID.randomUUID().toString()): EventBusWithGroups<T> {
+    return EventBusWithGroups(vertx = this, address = address, member = member)
+}
+
+
 
 // SharedData extensions
 

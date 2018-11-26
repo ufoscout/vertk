@@ -67,6 +67,7 @@
     <logback.version>1.2.3</logback.version>
     <mockito.version>2.19.0</mockito.version>
     <testcontainers.version>1.8.1</testcontainers.version>
+    <slf4j.version>[1.7.25,1.7.99]</slf4j.version>
     <vertx.version>3.5.4</vertx.version>
 
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
@@ -157,6 +158,11 @@
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-kotlin</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>

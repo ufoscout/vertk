@@ -22,7 +22,7 @@ suspend inline fun <T> EventBus.awaitSend(address: String, message: Any, options
 /**
  * To return a custom message failure code, the callback can throw a ReplyException
  */
-suspend inline fun <T> EventBus.awaitConsumer(address: String, noinline handler: suspend (message: T) -> Any): MessageConsumer<T> {
+inline fun <T> EventBus.awaitConsumer(address: String, noinline handler: suspend (message: T) -> Any): MessageConsumer<T> {
     return this.consumer(address) { message: Message<T> ->
         launch(Vertx.currentContext().dispatcher()) {
             try {

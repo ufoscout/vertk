@@ -6,7 +6,7 @@ import io.vertx.ext.mail.MailResult
 
 /**
  * A MailClient decorator implementation that keeps all emails in memory
- * and forward the send call to the decorated MailClient.
+ * and forward the publish call to the decorated MailClient.
  * This is useful for unit testing.
  */
 class InMemoryMailClientDecorator(val decoratedMailClient: MailClient = NoOpsMailClient()) : MailClient {

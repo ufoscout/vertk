@@ -13,12 +13,10 @@ abstract class BaseTest {
 
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private var testStartDate: Long = 0
+    protected val vertx = Vertx.vertx()
 
     companion object {
-
         protected val TIME_FORMAT = DecimalFormat("####,###.###", DecimalFormatSymbols(Locale.US))
-        val vertx = Vertx.vertx()
-
     }
 
     @BeforeEach
