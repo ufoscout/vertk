@@ -1,5 +1,6 @@
 package com.ufoscout.vertk
 
+import com.ufoscout.vertk.eventbus.Addr
 import com.ufoscout.vertk.eventbus.EventBusWithGroups
 import io.vertx.core.*
 import io.vertx.core.http.HttpServer
@@ -86,6 +87,6 @@ suspend fun <R> Vertx.awaitExecuteBlocking(action: suspend () -> R, ordered: Boo
 /**
  * Returns a new EventBusWithGroups
  */
-fun <T> Vertx.eventBusWithGroups(address: String, member: String = UUID.randomUUID().toString()): EventBusWithGroups<T> {
-    return EventBusWithGroups(vertx = this, address = address, member = member)
+fun <T> Vertx.eventBusWithGroups(address: Addr<T>): EventBusWithGroups<T> {
+    return EventBusWithGroups(vertx = this, address = address)
 }

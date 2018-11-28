@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.atomic.AtomicReference
 
@@ -15,9 +16,12 @@ class EventBusWithGroupsTest: BaseTest() {
     @Test
     fun shouldSendToSingleConsumer() = runBlocking<Unit> {
 
+        val addressOne = Addr<String>("address_one")
+        val addressTwo = Addr<String>("address_two")
+
         val count = CountDownLatch(4);
 
-        val groupBusOne = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
 
         val groupBusOne_groupOne = mutableListOf<String>()
         groupBusOne.consumer("groupOne") {
@@ -28,12 +32,13 @@ class EventBusWithGroupsTest: BaseTest() {
 
         groupBusOne.publish("hello1")
         groupBusOne.publish("hello2")
-        vertx.eventBusWithGroups<String>("address_one").publish("hello3")
+        vertx.eventBusWithGroups(addressOne).publish("hello3")
         groupBusOne.publish("hello4")
-        vertx.eventBusWithGroups<String>("address_two").publish("hello5")
+        vertx.eventBusWithGroups(addressTwo).publish("hello5")
 
-        count.await(50, TimeUnit.SECONDS)
+        count.await(5, TimeUnit.SECONDS)
 
+        assertEquals(0, count.count)
         assertEquals(4, groupBusOne_groupOne.size)
         assertTrue(groupBusOne_groupOne.contains("hello1"))
         assertTrue(groupBusOne_groupOne.contains("hello2"))
@@ -44,9 +49,10 @@ class EventBusWithGroupsTest: BaseTest() {
     @Test
     fun shouldSendFromAnotherBusWithSameAddress() = runBlocking<Unit> {
 
+        val addressOne = Addr<String>("address_one")
         val count = CountDownLatch(4);
 
-        val groupBusOne = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
 
         val groupBusOne_groupOne = mutableListOf<String>()
         groupBusOne.consumer("groupOne") {
@@ -55,15 +61,16 @@ class EventBusWithGroupsTest: BaseTest() {
             count.countDown()
         }
 
-        val groupBusTwo = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusTwo = vertx.eventBusWithGroups(addressOne)
 
         groupBusTwo.publish("hello1")
         groupBusTwo.publish("hello2")
         groupBusOne.publish("hello3")
         groupBusTwo.publish("hello4")
 
-        count.await(50, TimeUnit.SECONDS)
+        count.await(5, TimeUnit.SECONDS)
 
+        assertEquals(0, count.count)
         assertEquals(4, groupBusOne_groupOne.size)
         assertTrue(groupBusOne_groupOne.contains("hello1"))
         assertTrue(groupBusOne_groupOne.contains("hello2"))
@@ -72,11 +79,47 @@ class EventBusWithGroupsTest: BaseTest() {
     }
 
     @Test
+    fun shouldAllowMoreCunsumerWithSameGroupNameOnTheSameEventBusWithGroupInstance() = runBlocking<Unit> {
+
+        val addressOne = Addr<String>("address_one")
+
+        val iterations = 1000
+        val count = CountDownLatch(iterations);
+
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
+
+        val first_called = AtomicBoolean(false)
+        groupBusOne.consumer("groupOne") {
+            first_called.set(true)
+            count.countDown()
+        }
+
+        val second_called = AtomicBoolean(false)
+        groupBusOne.consumer("groupOne") {
+            second_called.set(true)
+            count.countDown()
+        }
+
+        for (_i in 0 until iterations) {
+            groupBusOne.publish("")
+        }
+
+        count.await(5, TimeUnit.SECONDS)
+
+        assertEquals(0, count.count)
+        assertTrue(first_called.get())
+        assertTrue(second_called.get())
+    }
+
+    @Test
     fun shouldSendOnlyToSameAddress() = runBlocking<Unit> {
+
+        val addressOne = Addr<String>("address_one")
+        val addressTwo = Addr<String>("address_two")
 
         val count = CountDownLatch(5);
 
-        val groupBusOne = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
 
         val groupBusOne_groupOne = mutableListOf<String>()
         groupBusOne.consumer("groupOne") {
@@ -86,7 +129,7 @@ class EventBusWithGroupsTest: BaseTest() {
         }
 
         val groupBusTwo_groupOne = mutableListOf<String>()
-        val groupBusTwo = vertx.eventBusWithGroups<String>("address_two")
+        val groupBusTwo = vertx.eventBusWithGroups(addressTwo)
         groupBusTwo.consumer("groupOne") {
             println("groupBusOne_groupOne called")
             groupBusTwo_groupOne.add(it.body())
@@ -99,7 +142,9 @@ class EventBusWithGroupsTest: BaseTest() {
         groupBusTwo.publish("hello4")
         groupBusTwo.publish("hello5")
 
-        count.await(50, TimeUnit.SECONDS)
+        count.await(5, TimeUnit.SECONDS)
+
+        assertEquals(0, count.count)
 
         assertEquals(2, groupBusOne_groupOne.size)
         assertTrue(groupBusOne_groupOne.contains("hello1"))
@@ -114,13 +159,15 @@ class EventBusWithGroupsTest: BaseTest() {
     @Test
     fun shouldSendToOnlyOneConsumerPerGroup() = runBlocking<Unit> {
 
+        val addressOne = Addr<String>("address_one")
+
         val iterations = 100
         val count = CountDownLatch(2*iterations);
 
-        val groupBusOne = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
         val groupOne = mutableListOf<String>()
 
-        val groupBusTwo = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusTwo = vertx.eventBusWithGroups(addressOne)
         val groupTwo = mutableListOf<String>()
 
         groupBusOne.consumer("groupOne") {
@@ -157,8 +204,8 @@ class EventBusWithGroupsTest: BaseTest() {
             groupBusOne.publish("hello")
         }
 
-        count.await(50, TimeUnit.SECONDS)
-
+        count.await(5, TimeUnit.SECONDS)
+        assertEquals(0, count.count)
         assertEquals(iterations, groupOne.size)
         assertEquals(iterations, groupTwo.size)
     }
@@ -166,9 +213,11 @@ class EventBusWithGroupsTest: BaseTest() {
     @Test
     fun shouldSendToDifferentGroupsToASingleConsumer() = runBlocking<Unit> {
 
+        val addressOne = Addr<String>("address_one")
+
         val count = CountDownLatch(8);
 
-        val groupBusOne = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
 
         val groupBusOne_groupOne = AtomicInteger(0)
         groupBusOne.consumer("groupOne") {
@@ -185,7 +234,7 @@ class EventBusWithGroupsTest: BaseTest() {
         }
 
         val groupBusTwo_groupOne = AtomicInteger(0)
-        val groupBusTwo = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusTwo = vertx.eventBusWithGroups(addressOne)
         groupBusTwo.consumer("groupOne") {
             println("groupBusTwo_groupOne called")
             groupBusOne_groupOne.incrementAndGet()
@@ -197,8 +246,9 @@ class EventBusWithGroupsTest: BaseTest() {
         groupBusTwo.publish("hello")
         groupBusTwo.publish("hello")
 
-        count.await(50, TimeUnit.SECONDS)
+        count.await(5, TimeUnit.SECONDS)
 
+        assertEquals(0, count.count)
         assertEquals(4, groupBusOne_groupOne.get() + groupBusTwo_groupOne.get())
         assertEquals(4, groupBusOne_groupTwo.get())
     }
@@ -206,13 +256,15 @@ class EventBusWithGroupsTest: BaseTest() {
     @Test
     fun shouldRemoveTheConsumer() = runBlocking<Unit> {
 
+        val addressOne = Addr<String>("address_one")
+
         val iterations = 100
         val count = AtomicReference(CountDownLatch(iterations))
 
-        val groupBusOne = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusOne = vertx.eventBusWithGroups(addressOne)
         val groupOne = AtomicInteger()
 
-        val groupBusTwo = vertx.eventBusWithGroups<String>("address_one")
+        val groupBusTwo = vertx.eventBusWithGroups(addressOne)
         val groupTwo = AtomicInteger()
 
         val messageConsumerOne = groupBusOne.consumer("groupOne") {
@@ -231,7 +283,9 @@ class EventBusWithGroupsTest: BaseTest() {
             groupBusOne.publish("hello")
         }
 
-        count.get().await(50, TimeUnit.SECONDS)
+        count.get().await(5, TimeUnit.SECONDS)
+
+        assertEquals(0, count.get().count)
         assertEquals(100, groupOne.get() + groupTwo.get())
 
         // Now let's remove one consumer
@@ -245,7 +299,9 @@ class EventBusWithGroupsTest: BaseTest() {
             groupBusOne.publish("hello")
         }
 
-        count.get().await(50, TimeUnit.SECONDS)
+        count.get().await(5, TimeUnit.SECONDS)
+
+        assertEquals(0, count.get().count)
         assertEquals(0, groupOne.get())
         assertEquals(100, groupTwo.get())
 

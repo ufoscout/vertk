@@ -10,13 +10,16 @@ import io.vertx.core.shareddata.AsyncMap
 import org.slf4j.LoggerFactory
 import java.util.*
 
+
+data class Addr<T>(val address: String)
+
 /**
  * A EventBusWithGroups is an EventBus based publisher/subscriber structure that permits to publish notifications to
  * groups of consumer.
  * The difference between the EventBus.publish() method is that when publishing on a EventBusWithGroups, only one consumer per each group
  * is notified.
  */
-class EventBusWithGroups<T>(val vertx: Vertx, val address: String, val member: String) {
+class EventBusWithGroups<T>(val vertx: Vertx, val address: Addr<T>) {
 
     companion object {
 
@@ -38,12 +41,13 @@ class EventBusWithGroups<T>(val vertx: Vertx, val address: String, val member: S
      * If more than one consumer for the same group is present, only one consumer will receive the message.
      */
     suspend fun consumer(groupName: String, handler: (Message<T>) -> Unit): GroupMessageConsumer<T> {
+        val member = UUID.randomUUID().toString()
         return GroupMessageConsumer<T>(
                 member = member,
                 address = address,
                 groupName = groupName,
                 map = load(),
-                vertxConsumer = vertx.eventBus().consumer<T>(put(groupName), handler)
+                vertxConsumer = vertx.eventBus().consumer<T>(put(groupName, member), handler)
         )
     }
 
@@ -52,19 +56,20 @@ class EventBusWithGroups<T>(val vertx: Vertx, val address: String, val member: S
      * If more than one consumer for the same group is present, only one consumer will receive the message.
      */
     suspend fun awaitConsumer(groupName: String, handler: suspend (T) -> Unit): GroupMessageConsumer<T> {
+        val member = UUID.randomUUID().toString()
         return GroupMessageConsumer<T>(
                 member = member,
                 address = address,
                 groupName = groupName,
                 map = load(),
-                vertxConsumer = vertx.eventBus().awaitConsumer<T>(put(groupName), handler)
+                vertxConsumer = vertx.eventBus().awaitConsumer<T>(put(groupName, member), handler)
         )
     }
 
-    private suspend fun put(route: String): String {
+    private suspend fun put(route: String, member: String): String {
         val map = load()
-        val addressMember = createAddressMember(address, route, member)
-        val addressRoute = createAddressRoute(address, route)
+        val addressMember = createAddressMember(address.address, route, member)
+        val addressRoute = createAddressRoute(address.address, route)
 
         map.awaitPut(addressMember, addressRoute)
         LOG.debug("Added - address: {}, publish: {}", address, route)
@@ -88,7 +93,7 @@ class EventBusWithGroups<T>(val vertx: Vertx, val address: String, val member: S
 
     private suspend fun load(): AsyncMap<String, String> {
         if (table == null) {
-            table = vertx.sharedData().awaitGetAsyncMap<String, String>(address)
+            table = vertx.sharedData().awaitGetAsyncMap<String, String>(address.address)
             LOG.debug("Loaded - address: {}", address)
         }
         return table!!
@@ -100,7 +105,7 @@ class GroupMessageConsumer<T>(
         private val map: AsyncMap<String, String>,
         private val vertxConsumer: io.vertx.core.eventbus.MessageConsumer<T>,
         val groupName: String,
-        val address: String,
+        val address: Addr<T>,
         val member: String
 ) {
 
@@ -109,8 +114,8 @@ class GroupMessageConsumer<T>(
     }
 
     suspend fun unregister() {
-        val addressMember = EventBusWithGroups.createAddressMember(address, groupName, member)
-        val addressRoute = EventBusWithGroups.createAddressRoute(address, groupName)
+        val addressMember = EventBusWithGroups.createAddressMember(address.address, groupName, member)
+        val addressRoute = EventBusWithGroups.createAddressRoute(address.address, groupName)
 
         if (map.awaitRemoveIfPresent(addressMember, addressRoute)) {
             LOG.debug("Removed - address: {}, publish: {}", address, groupName)
