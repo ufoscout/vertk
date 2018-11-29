@@ -29,23 +29,19 @@ class VertxTest: BaseTest() {
     }
 
     @Test
-    fun shouldLaunchSuspendableFunctionsInWorkerPool(): Unit {
+    fun shouldRunTheSuspendableFunctionsInCurrentContextBlockingTheTrhead(): Unit {
 
-        val countDownLatch = CountDownLatch(1)
-        val thread = AtomicReference<String>("")
+        val thread = vertx.runBlocking {
+            getThreadName()
+        }
 
-        vertx.executeBlocking({
-            thread.set(getThreadName())
-            countDownLatch.countDown()
-        })
-
-        countDownLatch.await()
-        println("Thread is: " + thread.get())
-        assertTrue(thread.get().contains("vert"))
-        assertTrue(thread.get().contains("worker"))
+        assertNotNull(thread)
+        assertTrue(thread.contains("vert"))
+        assertFalse(thread.contains("worker"))
     }
 
-    suspend fun getThreadName(): String {
+
+    suspend private fun getThreadName(): String {
         return Thread.currentThread().name
     }
 
@@ -56,6 +52,7 @@ class VertxTest: BaseTest() {
 
         vertx.awaitExecuteBlocking({
             executed.set(true)
+            Thread.sleep(50)
         })
 
         assertTrue(executed.get());

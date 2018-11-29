@@ -6,6 +6,7 @@ import io.vertx.core.*
 import io.vertx.core.http.HttpServer
 import io.vertx.kotlin.coroutines.awaitResult
 import io.vertx.kotlin.coroutines.dispatcher
+import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.runBlocking
 import java.util.*
 
@@ -25,10 +26,23 @@ suspend fun HttpServer.awaitListen(port: Int, host: String): HttpServer {
 }
 
 /**
- * Launch a suspendable function in the current Vertx context
+ * Executes a suspendable function in the current Vertx context without blocking current thread.
+ * This uses the kotlin coroutines "launch()" using the current Vertx dispatcher.
  */
 fun Vertx.launch(action: suspend () -> Unit) {
     kotlinx.coroutines.experimental.launch(this.orCreateContext.dispatcher()) {
+        action()
+    }
+}
+
+/**
+ * Executes a suspendable function in the current Vertx context.
+ * This uses the kotlin coroutines "runBlocking()" using the current Vertx dispatcher.
+ *
+ * WARN: this methods BLOCKS the current thread!
+ */
+fun <T> Vertx.runBlocking(action: suspend () -> T): T {
+    return kotlinx.coroutines.experimental.runBlocking(this.orCreateContext.dispatcher()) {
         action()
     }
 }
@@ -61,19 +75,11 @@ inline suspend fun <reified T : Verticle> Vertx.awaitDeployVerticle(deploymentOp
     }
 }
 
-fun <R> Vertx.executeBlocking(action: suspend () -> R, ordered: Boolean = true) {
-    this.launch {
-        this.awaitExecuteBlocking({
-            action()
-        }, ordered)
-    }
-}
-
-suspend fun <R> Vertx.awaitExecuteBlocking(action: suspend () -> R, ordered: Boolean = true): R {
+suspend fun <R> Vertx.awaitExecuteBlocking(action: () -> R, ordered: Boolean = true): R {
     return awaitResult<R> {
         val handler: Handler<Future<R>> = Handler {
             try {
-                val result = runBlocking(this.orCreateContext.dispatcher()) { action() }
+                val result = action()
                 it.complete(result)
             } catch (e: Throwable) {
                 it.fail(e)
@@ -81,7 +87,6 @@ suspend fun <R> Vertx.awaitExecuteBlocking(action: suspend () -> R, ordered: Boo
         }
         this.executeBlocking(handler, ordered, it)
     }
-
 }
 
 /**
